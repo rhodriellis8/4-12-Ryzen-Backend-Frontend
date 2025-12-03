@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ryzen - Trading Journal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Manrope:wght@200..800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Scripts for Vanta.js Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              geist: ['Inter', 'sans-serif'],
+              manrope: ['Manrope', 'sans-serif'],
+              mono: ['JetBrains Mono', 'monospace'],
+            },
+            animation: {
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      :root {
+        --font-geist: 'Inter', system-ui, sans-serif;
+        --font-manrope: 'Manrope', sans-serif;
+        --font-mono: 'JetBrains Mono', monospace;
+        --color-accent: #18181b; /* Default to Dark Cursor for Light Mode */
+        --bg-dark: #0a0a0a;
+        
+        /* Light Mode Button Colors */
+        --btn-bg: #ffffff;
+        --btn-text: #1e1b4b; /* Dark Indigo Text */
+
+        /* Light Mode Shiny CTA specific */
+        --shiny-border: #818cf8; /* Indigo 400 */
+        --shiny-main: #6366f1;   /* Indigo 500 */
+        --shiny-shine: #c7d2fe;  /* Indigo 200 */
+      }
+      .dark {
+        --color-accent: #ffffff; /* White Cursor for Dark Mode */
+        
+        /* Dark Mode Button Colors */
+        --btn-bg: #101010;
+        --btn-text: #ffffff;
+
+        /* Dark Mode Shiny CTA specific */
+        --shiny-border: #1a1818; /* Dark Black/Grey */
+        --shiny-main: #1d4ed8;   /* Blue */
+        --shiny-shine: #8484ff;  /* Purple/Blue Shine */
+      }
+      @property --gradient-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; } 
+      @property --gradient-angle-offset { syntax: "<angle>"; initial-value: 0deg; inherits: false; } 
+      @property --gradient-percent { syntax: "<percentage>"; initial-value: 20%; inherits: false; } 
+      @property --gradient-shine { syntax: "<color>"; initial-value: #8484ff; inherits: false; } 
+      .shiny-cta { --gradient-angle: 0deg; --gradient-angle-offset: 0deg; --gradient-percent: 20%; --gradient-shine: var(--shiny-shine); --shadow-size: 2px; position: relative; overflow: hidden; border-radius: 9999px; padding: 0.5rem 1.25rem; font-size: 0.875rem; line-height: 1.2; font-weight: 500; color: var(--btn-text); background: linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box, conic-gradient( from calc(var(--gradient-angle) - var(--gradient-angle-offset)), transparent 0%, var(--shiny-main) 5%, var(--gradient-shine) 15%, var(--shiny-main) 30%, transparent 40%, transparent 100% ) border-box; border: 2px solid transparent; box-shadow: inset 0 0 0 1px var(--shiny-border); outline: none; transition: --gradient-angle-offset 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-percent 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-shine 800ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s; cursor: pointer; isolation: isolate; outline-offset: 4px; font-family: 'Inter', 'Helvetica Neue', sans-serif; z-index: 0; animation: border-spin 2.5s linear infinite; } 
+      @keyframes border-spin { to { --gradient-angle: 360deg; } } 
+      .shiny-cta:active { transform: translateY(1px); } 
+      .shiny-cta::before { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; --size: calc(100% - 6px); --position: 2px; --space: 4px; width: var(--size); height: var(--size); background: radial-gradient(circle at var(--position) var(--position), white 0.5px, transparent 0) padding-box; background-size: var(--space) var(--space); background-repeat: space; mask-image: conic-gradient( from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black ); border-radius: inherit; opacity: 0.4; pointer-events: none; } 
+      .shiny-cta::after { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1; width: 100%; aspect-ratio: 1; background: linear-gradient(-50deg, transparent, var(--shiny-main), transparent); mask-image: radial-gradient(circle at bottom, transparent 40%, black); opacity: 0.6; animation: shimmer 4s linear infinite; animation-play-state: running; } 
+      .shiny-cta span { position: relative; z-index: 2; display: inline-block; } 
+      .shiny-cta span::before { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: -1; --size: calc(100% + 1rem); width: var(--size); height: var(--size); box-shadow: inset 0 -1ex 2rem 4px var(--shiny-main); opacity: 0; border-radius: inherit; transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1); animation: breathe 4.5s linear infinite; } 
+      @keyframes shimmer { to { transform: translate(-50%, -50%) rotate(360deg);} } 
+      @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(1);} 50% { transform: translate(-50%, -50%) scale(1.20);} }
+      
+      body {
+        font-family: var(--font-manrope);
+        background-color: #fafafa; /* Zinc 50 */
+        color: #18181b; /* Zinc 900 */
+        transition: background-color 0.3s, color 0.3s;
+        cursor: none;
+      }
+      .dark body {
+        background-color: #000000; /* Black */
+        color: #e4e4e7; /* Zinc 200 */
+      }
+      h1, h2, h3, h4, h5, h6 {
+        font-family: var(--font-geist);
+      }
+      .font-geist {
+        font-family: var(--font-geist);
+      }
+      .font-mono {
+        font-family: var(--font-mono);
+      }
+      .glass-panel {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: background-color 0.3s, border-color 0.3s;
+      }
+      .dark .glass-panel {
+        background: rgba(24, 24, 27, 0.6);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .bg-grid {
+        background-size: 40px 40px;
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+      }
+      .dark .bg-grid {
+        background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      }
+      /* Custom scrollbar for webkit */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent; 
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #d4d4d8; 
+        border-radius: 4px;
+      }
+      .dark ::-webkit-scrollbar-thumb {
+        background: #27272a; 
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #a1a1aa; 
+      }
+      .dark ::-webkit-scrollbar-thumb:hover {
+        background: #3f3f46; 
+      }
+      
+      /* Gradient Border Effect */
+      .border-gradient {
+        position: relative;
+      }
+      .border-gradient::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit; /* inherit from parent */
+        padding: 1px;
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        background: linear-gradient(225deg, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.0) 100%);
+        pointer-events: none;
+      }
+      .dark .border-gradient::before {
+        background: linear-gradient(225deg, rgba(255, 255, 255, 0.0) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.0) 100%);
+      }
+
+      /* Custom Cursor */
+      .cursor-dot,
+      .cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 9999;
+        pointer-events: none;
+      }
+      .cursor-dot {
+        width: 8px;
+        height: 8px;
+        background-color: var(--color-accent);
+        box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8);
+        transition: width 0.1s, height 0.1s;
+      }
+      .cursor-ring {
+        width: 32px;
+        height: 32px;
+        border: 1.5px solid rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.05);
+        transition: all 0.1s ease-out;
+      }
+      .dark .cursor-ring {
+        border-color: rgba(255, 255, 255, 0.4);
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+      /* In light mode, make ring visible */
+      :not(.dark) .cursor-ring {
+        border-color: rgba(0, 0, 0, 0.3);
+        background-color: rgba(0, 0, 0, 0.02);
+      }
+      
+      body.hovering .cursor-ring {
+        width: 50px;
+        height: 50px;
+        border-color: var(--color-accent);
+        background-color: rgba(255, 255, 255, 0.15);
+      }
+      :not(.dark) body.hovering .cursor-ring {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      /* ---------- Glowing Button Styles ---------- */
+      .btn-wrapper {
+        position: relative;
+        display: inline-block;
+        width: 100%;
+      }
+
+      .btn {
+        --border-radius: 12px;
+        --padding: 4px;
+        --transition: 0.4s;
+        --highlight-color-hue: 210deg;
+
+        user-select: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+        /* Gradient Border Logic */
+        border: 1px solid transparent;
+        /* Dynamic background color based on theme variable */
+        background: linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box,
+                    linear-gradient(135deg, #3b82f6, #10b981) border-box;
+
+        /* Complex layered shadows */
+        box-shadow:
+          inset 0px 1px 1px rgba(255, 255, 255, 0.2),
+          inset 0px 2px 2px rgba(255, 255, 255, 0.15),
+          inset 0px 4px 4px rgba(255, 255, 255, 0.1),
+          inset 0px 8px 8px rgba(255, 255, 255, 0.05),
+          inset 0px 16px 16px rgba(255, 255, 255, 0.05),
+          0px -1px 1px rgba(0, 0, 0, 0.02),
+          0px -2px 2px rgba(0, 0, 0, 0.03),
+          0px -4px 4px rgba(0, 0, 0, 0.05),
+          0px -8px 8px rgba(0, 0, 0, 0.06),
+          0px -16px 16px rgba(0, 0, 0, 0.08);
+
+        border-radius: var(--border-radius);
+        cursor: pointer;
+
+        transition:
+          box-shadow var(--transition),
+          transform 0.1s;
+      }
+
+      .btn:hover {
+        box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+      }
+      
+      .btn:active {
+        transform: scale(0.98);
+      }
+
+      .btn span {
+        font-family: var(--font-geist);
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem; /* text-xs */
+        letter-spacing: 0.05em;
+        color: var(--btn-text);
+      }
+
+      .btn-svg {
+        height: 20px;
+        margin-right: 0.5rem;
+        fill: var(--btn-text);
+        filter: drop-shadow(0 0 2px #ffffff99);
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
+  }
+}
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+
+    <!-- Custom Cursor -->
+    <div id="cursor-dot" class="cursor-dot"></div>
+    <div id="cursor-ring" class="cursor-ring"></div>
+
+    <script>
+      const cursorDot = document.getElementById('cursor-dot');
+      const cursorRing = document.getElementById('cursor-ring');
+      document.addEventListener('mousemove', (e) => {
+        const x = e.clientX;
+        const y = e.clientY;
+        cursorDot.style.left = `${x}px`;
+        cursorDot.style.top = `${y}px`;
+        cursorRing.style.left = `${x}px`;
+        cursorRing.style.top = `${y}px`;
+        const target = e.target;
+        // Check for common interactable elements, including those nested within buttons/links
+        if (target.closest('.interactable') || target.closest('a') || target.closest('button')) {
+          document.body.classList.add('hovering');
+        } else {
+          document.body.classList.remove('hovering');
+        }
+      });
+    </script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
