@@ -46,7 +46,7 @@ const CalendarWidget: React.FC = () => {
               {d}
             </span>
             {hasTrade && (
-               <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${isWin ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'}`}>
+               <span className={`text-[10px] font-mono px-1.5 py-0.5 rounded border ${isWin ? 'bg-zinc-900 text-white dark:bg-white dark:text-black border-transparent' : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'}`}>
                  {pnl}
                </span>
             )}
@@ -55,7 +55,7 @@ const CalendarWidget: React.FC = () => {
           {hasTrade && (
             <div className="mt-2 space-y-1">
                 <div className="flex items-center gap-1.5">
-                    <div className={`w-1.5 h-1.5 rounded-full ${isWin ? 'bg-emerald-500' : 'bg-rose-500'}`}></div>
+                    <div className={`w-1.5 h-1.5 rounded-full ${isWin ? 'bg-zinc-900 dark:bg-white' : 'bg-rose-500'}`}></div>
                     <span className="text-[10px] text-zinc-600 dark:text-zinc-400 truncate">
                         {isWin ? 'Long ES' : 'Short NQ'}
                     </span>

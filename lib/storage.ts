@@ -7,7 +7,7 @@ export const MAX_IMAGE_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
 export interface UploadContext {
   userId: string;
-  entity: 'journals' | 'playbooks';
+  entity: 'journals' | 'playbooks' | 'profiles';
   entityId: string | number;
 }
 

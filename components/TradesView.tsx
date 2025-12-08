@@ -104,13 +104,13 @@ const TradesView: React.FC = () => {
                             <td className="px-4 py-3">
                                 <div className="flex flex-col">
                                     <span className="font-medium text-zinc-900 dark:text-zinc-200">{trade.symbol}</span>
-                                    <span className={`text-[10px] inline-flex items-center gap-1 ${trade.type === 'Long' ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                    <span className={`text-[10px] inline-flex items-center gap-1 ${trade.type === 'Long' ? 'text-zinc-500 dark:text-zinc-400' : 'text-rose-500'}`}>
                                         {trade.type} {trade.type === 'Long' ? <ArrowUpRight size={10} /> : <ArrowDownRight size={10} />}
                                     </span>
                                 </div>
                             </td>
                             <td className="px-4 py-3">
-                                <span className={`font-mono font-medium ${trade.pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                                <span className={`font-medium ${trade.pnl >= 0 ? 'text-zinc-900 dark:text-white' : 'text-rose-500'}`}>
                                     {trade.pnl >= 0 ? '+' : ''}${Math.abs(trade.pnl).toFixed(2)}
                                 </span>
                             </td>
@@ -131,22 +131,22 @@ const TradesView: React.FC = () => {
       <div className="flex-1 flex flex-col gap-6">
         {/* Stats Row */}
         <div className="flex gap-4">
-            <div className="flex-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl p-4 flex justify-between items-center shadow-sm">
+            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                 <div>
                     <p className="text-xs text-zinc-500">Entry Price</p>
-                    <p className="text-lg font-mono font-medium text-zinc-900 dark:text-white">{selectedTrade.entryPrice}</p>
+                    <p className="text-lg font-medium text-zinc-900 dark:text-white">{selectedTrade.entryPrice}</p>
                 </div>
             </div>
-            <div className="flex-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl p-4 flex justify-between items-center shadow-sm">
+            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                 <div>
                     <p className="text-xs text-zinc-500">Exit Price</p>
-                    <p className="text-lg font-mono font-medium text-zinc-900 dark:text-white">{selectedTrade.exitPrice}</p>
+                    <p className="text-lg font-medium text-zinc-900 dark:text-white">{selectedTrade.exitPrice}</p>
                 </div>
             </div>
-            <div className="flex-1 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-xl p-4 flex justify-between items-center shadow-sm">
+            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                 <div>
                     <p className="text-xs text-zinc-500">Net P&L</p>
-                    <p className={`text-lg font-mono font-medium ${selectedTrade.pnl >= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                    <p className={`text-lg font-medium ${selectedTrade.pnl >= 0 ? 'text-zinc-900 dark:text-white' : 'text-rose-500'}`}>
                         {selectedTrade.pnl >= 0 ? '+' : ''}${selectedTrade.pnl}
                     </p>
                 </div>

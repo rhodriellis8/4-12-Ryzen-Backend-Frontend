@@ -24,6 +24,9 @@ const PricingView: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ priceId }),
+      }).catch(err => {
+        console.error('Network Error:', err);
+        throw new Error('Unable to connect to the billing server. If you are in development, ensure the server is running on port 4000.');
       });
 
       if (!response.ok) {
@@ -43,9 +46,10 @@ const PricingView: React.FC = () => {
         console.error(error);
         alert('Unable to start checkout. Please try again.');
       }
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Unable to start checkout. Please try again.');
+      // Show user-friendly error message
+      alert(err.message || 'Unable to start checkout. Please try again.');
     } finally {
       setLoadingPriceId(null);
     }
@@ -54,7 +58,7 @@ const PricingView: React.FC = () => {
   return (
     <div>
       {/* Container */}
-      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-gradient-to-br from-blue-500/5 via-transparent to-blue-500/5 border-gradient before:rounded-[28px] shadow-[0_40px_120px_rgba(0,0,0,0.1)] dark:shadow-[0_40px_120px_rgba(0,0,0,0.95)]">
+      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-white/40 dark:bg-gradient-to-br dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 border-gradient before:rounded-[28px] shadow-sm dark:shadow-[0_40px_120px_rgba(0,0,0,0.95)]">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 relative z-10">
@@ -86,13 +90,13 @@ const PricingView: React.FC = () => {
         </div>
 
         {/* Pricing Cards Grid */}
-        <div className="grid gap-6 md:grid-cols-3 relative z-10 items-center">
+        <div className="grid gap-6 md:grid-cols-2 max-w-4xl mx-auto relative z-10 items-center">
           {/* Basic Plan */}
             <PricingCard 
             title="Basic"
             price={billingCycle === 'monthly' ? '19' : '15'}
                 subtitle="For traders starting their journey."
-                icon={<Star size={16} className="text-white" />}
+                icon={<Star size={16} />}
             features={['Up to 100 trades/month', 'Core analytics dashboard']}
             buttonText={loadingPriceId === BASIC_PRICE_ID ? 'Redirecting…' : 'Start Basic'}
                 delay="0"
@@ -105,7 +109,7 @@ const PricingView: React.FC = () => {
                 title="Pro" 
             price={billingCycle === 'monthly' ? '49' : '39'}
                 subtitle="For serious traders scaling their strategy."
-                icon={<Flame size={16} className="text-white" />}
+                icon={<Flame size={16} />}
             features={['Unlimited trades', 'Advanced analytics + AI insights']}
             buttonText={loadingPriceId === PRO_PRICE_ID ? 'Redirecting…' : 'Get started'}
                 popular
@@ -181,8 +185,8 @@ interface PricingCardProps {
 const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popular, delay, onClick, loading }: PricingCardProps) => {
     // Styling logic for Popular vs Standard cards
     const containerClasses = popular
-        ? "group relative flex flex-col rounded-2xl p-6 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border border-emerald-500/50 shadow-[0_20px_60px_rgba(16,185,129,0.15)] dark:shadow-[0_20px_60px_rgba(16,185,129,0.2)] transition-all duration-500 hover:scale-[1.02] lg:scale-105 z-10"
-        : "group relative flex flex-col bg-gradient-to-br from-blue-500/5 to-blue-500/0 hover:from-white/10 hover:to-white/0 rounded-2xl p-6 border border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-500 hover:scale-[1.02] shadow-[0_18px_45px_rgba(0,0,0,0.1)] dark:shadow-[0_18px_45px_rgba(0,0,0,0.8)]";
+        ? "group relative flex flex-col rounded-2xl p-6 bg-white dark:bg-gradient-to-br dark:from-emerald-500/10 dark:via-emerald-500/5 dark:to-transparent border border-emerald-500/20 dark:border-emerald-500/50 shadow-xl shadow-emerald-500/5 dark:shadow-[0_20px_60px_rgba(16,185,129,0.2)] transition-all duration-500 hover:scale-[1.02] lg:scale-105 z-10"
+        : "group relative flex flex-col bg-white dark:bg-gradient-to-br dark:from-blue-500/5 dark:to-blue-500/0 hover:dark:from-white/10 hover:dark:to-white/0 rounded-2xl p-6 border border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-500 hover:scale-[1.02] shadow-sm hover:shadow-md dark:shadow-[0_18px_45px_rgba(0,0,0,0.8)]";
 
     return (
         <div className={containerClasses} style={{ animationDelay: `${delay}ms` }}>
@@ -194,14 +198,14 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
             )}
             
             {/* Top Glow Line */}
-            <div className={`absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent ${popular ? 'via-emerald-400/70' : 'via-white/70'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className={`absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent ${popular ? 'via-emerald-500/30 dark:via-emerald-400/70' : 'via-zinc-200 dark:via-white/70'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
 
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <h3 className="text-base font-bold font-geist text-zinc-900 dark:text-slate-50">{title}</h3>
                     <p className="text-xs text-zinc-500 dark:text-slate-400 mt-1 max-w-[140px] leading-snug">{subtitle}</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-zinc-900 dark:bg-slate-900 flex items-center justify-center shadow-inner text-white">
+                <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-slate-900 flex items-center justify-center shadow-inner text-zinc-900 dark:text-white">
                     {icon}
                 </div>
             </div>

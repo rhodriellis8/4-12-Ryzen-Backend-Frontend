@@ -76,9 +76,9 @@ const TASK_TYPES = [
 ];
 
 const PRIORITIES: { value: TaskPriority; label: string; color: string }[] = [
-  { value: 'high', label: 'High', color: 'text-rose-500' },
-  { value: 'medium', label: 'Medium', color: 'text-amber-500' },
-  { value: 'low', label: 'Low', color: 'text-emerald-500' },
+  { value: 'high', label: 'High', color: 'bg-rose-500' },
+  { value: 'medium', label: 'Medium', color: 'bg-amber-500' },
+  { value: 'low', label: 'Low', color: 'bg-emerald-500' },
 ];
 
 // ==================== HELPER FUNCTIONS ====================
@@ -95,7 +95,7 @@ const getTaskTypeLabel = (type: string | null) => {
 
 const getPriorityColor = (priority: TaskPriority | null) => {
   const found = PRIORITIES.find((p) => p.value === priority);
-  return found?.color ?? 'text-zinc-400';
+  return found?.color ?? 'bg-zinc-400';
 };
 
 const getDueDateStatus = (dueDate: string | null): 'overdue' | 'soon' | 'ok' | null => {
@@ -167,7 +167,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
             {getTaskTypeLabel(task.task_type)}
           </span>
           {task.priority && (
-            <Flag size={12} className={getPriorityColor(task.priority)} fill="currentColor" />
+            <div className={`w-2 h-2 rounded-full ${getPriorityColor(task.priority)}`} title={`Priority: ${task.priority}`} />
           )}
           {task.is_recurring && <RefreshCw size={12} className="text-purple-400" />}
         </div>
@@ -268,7 +268,7 @@ const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => (
       <span className={`text-[10px] px-2 py-0.5 rounded-full border ${getTaskTypeStyle(task.task_type)}`}>
         {getTaskTypeLabel(task.task_type)}
       </span>
-      {task.priority && <Flag size={12} className={getPriorityColor(task.priority)} fill="currentColor" />}
+      {task.priority && <div className={`w-2 h-2 rounded-full ${getPriorityColor(task.priority)}`} />}
     </div>
   </div>
 );
@@ -348,7 +348,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
   const [title, setTitle] = useState(data.task?.title ?? '');
   const [description, setDescription] = useState(data.task?.description ?? '');
   const [taskType, setTaskType] = useState(data.task?.task_type ?? 'other');
-  const [priority, setPriority] = useState<TaskPriority | ''>(data.task?.priority ?? '');
+  const [priority, setPriority] = useState<TaskPriority>(data.task?.priority ?? 'low');
   const [dueDate, setDueDate] = useState(data.task?.due_date ?? '');
   const [columnId, setColumnId] = useState<TaskColumnId>(data.task?.column_id ?? data.defaultColumn ?? 'backlog');
   const [isRecurring, setIsRecurring] = useState(data.task?.is_recurring ?? false);
@@ -374,152 +374,187 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-zinc-800/80 to-zinc-900/80 border-b border-zinc-800">
-          <h2 className="text-lg font-semibold text-zinc-100">{isEdit ? 'Edit Task' : 'New Task'}</h2>
-          <button onClick={onClose} className="p-1 text-zinc-500 hover:text-zinc-300 transition-colors">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100 dark:border-zinc-800/50">
+          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight">{isEdit ? 'Edit Task' : 'Create New Task'}</h2>
+          <button onClick={onClose} className="p-2 -mr-2 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800">
             <X size={20} />
           </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
           {/* Title */}
-          <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Title *</label>
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50"
-              placeholder="Task title..."
+              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              placeholder="What needs to be done?"
               autoFocus
             />
           </div>
 
           {/* Description */}
-          <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">Description</label>
+          <div className="space-y-1.5">
+            <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Description</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 resize-none"
-              placeholder="Add details..."
+              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none"
+              placeholder="Add details, context, or subtasks..."
               rows={3}
             />
           </div>
 
           {/* Type + Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Type</label>
-              <select
-                value={taskType}
-                onChange={(e) => setTaskType(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-              >
-                {TASK_TYPES.map((t) => (
-                  <option key={t.value} value={t.value}>
-                    {t.label}
-                  </option>
-                ))}
-              </select>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Type</label>
+              <div className="relative">
+                <select
+                  value={taskType}
+                  onChange={(e) => setTaskType(e.target.value)}
+                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
+                >
+                  {TASK_TYPES.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                </div>
+              </div>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Priority</label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value as TaskPriority | '')}
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-              >
-                <option value="">None</option>
-                {PRIORITIES.map((p) => (
-                  <option key={p.value} value={p.value}>
-                    {p.label}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Priority</label>
+              <div className="relative">
+                <select
+                  value={priority}
+                  onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
+                >
+                  {PRIORITIES.map((p) => (
+                    <option key={p.value} value={p.value}>
+                      {p.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Due Date + Column */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Due Date</label>
+          <div className="grid grid-cols-2 gap-5">
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Due Date</label>
               <input
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
+                className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
               />
             </div>
-            <div>
-              <label className="block text-xs font-medium text-zinc-400 mb-1">Column</label>
-              <select
-                value={columnId}
-                onChange={(e) => setColumnId(e.target.value as TaskColumnId)}
-                className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-              >
-                {COLUMNS.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-1.5">
+              <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Column</label>
+              <div className="relative">
+                <select
+                  value={columnId}
+                  onChange={(e) => setColumnId(e.target.value as TaskColumnId)}
+                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
+                >
+                  {COLUMNS.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
+                </select>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Recurring */}
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={isRecurring}
-                onChange={(e) => setIsRecurring(e.target.checked)}
-                className="w-4 h-4 rounded border-zinc-600 bg-zinc-800 text-emerald-500 focus:ring-emerald-500/50"
-              />
-              <span className="text-sm text-zinc-300">Recurring task</span>
+          <div className="flex items-center gap-4 pt-1">
+            <label className="flex items-center gap-3 cursor-pointer group">
+              <div className="relative flex items-center">
+                <input
+                  type="checkbox"
+                  checked={isRecurring}
+                  onChange={(e) => setIsRecurring(e.target.checked)}
+                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 checked:border-emerald-500 checked:bg-emerald-500 transition-all"
+                />
+                <svg
+                  className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="20 6 9 17 4 12" />
+                  <path d="M3.5 6.5 L5 8 L8.5 4.5" />
+                </svg>
+              </div>
+              <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">Recurring task</span>
             </label>
             {isRecurring && (
-              <select
-                value={recurringFrequency ?? ''}
-                onChange={(e) => setRecurringFrequency((e.target.value || null) as TaskFrequency)}
-                className="px-3 py-1 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none"
-              >
-                <option value="">Select...</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </select>
+              <div className="relative animate-in fade-in slide-in-from-left-2 duration-200">
+                <select
+                  value={recurringFrequency ?? ''}
+                  onChange={(e) => setRecurringFrequency((e.target.value || null) as TaskFrequency)}
+                  className="appearance-none pl-3 pr-8 py-1.5 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
+                >
+                  <option value="">Select frequency...</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
+                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+                  <svg width="8" height="4" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
+                </div>
+              </div>
             )}
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-zinc-800">
+          <div className="flex items-center justify-between pt-6 border-t border-zinc-100 dark:border-zinc-800">
             {isEdit && onDelete ? (
               <button
                 type="button"
                 onClick={onDelete}
-                className="px-4 py-2 text-sm text-rose-400 hover:bg-rose-500/20 rounded-lg transition-colors"
+                className="px-4 py-2 text-sm font-medium text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors"
               >
                 Delete Task
               </button>
             ) : (
               <div />
             )}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-3">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+                className="px-5 py-2.5 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={!title.trim() || saving}
-                className="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
               >
                 {saving ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Task'}
               </button>
@@ -749,39 +784,53 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
         </div>
         <div className="flex items-center gap-3">
           {/* Type Filter */}
-          <select
-            value={typeFilter}
-            onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-          >
-            <option value="">All Types</option>
-            {TASK_TYPES.map((t) => (
-              <option key={t.value} value={t.value}>
-                {t.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value)}
+              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-shadow cursor-pointer shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/80"
+            >
+              <option value="">All Types</option>
+              {TASK_TYPES.map((t) => (
+                <option key={t.value} value={t.value}>
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 1L5 5L9 1" />
+              </svg>
+            </div>
+          </div>
 
           {/* Priority Filter */}
-          <select
-            value={priorityFilter}
-            onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
-            className="px-3 py-1.5 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50"
-          >
-            <option value="">All Priorities</option>
-            {PRIORITIES.map((p) => (
-              <option key={p.value} value={p.value}>
-                {p.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              value={priorityFilter}
+              onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
+              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-shadow cursor-pointer shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/80"
+            >
+              <option value="">All Priorities</option>
+              {PRIORITIES.map((p) => (
+                <option key={p.value} value={p.value}>
+                  {p.label}
+                </option>
+              ))}
+            </select>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
+              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M1 1L5 5L9 1" />
+              </svg>
+            </div>
+          </div>
 
           {/* New Task Button */}
           <button
             onClick={() => setTaskModal({ mode: 'create' })}
-            className="flex items-center gap-2 px-4 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-medium rounded-lg transition-colors"
+            className="flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95"
           >
-            <Plus size={16} />
+            <Plus size={18} strokeWidth={2.5} />
             New Task
           </button>
         </div>

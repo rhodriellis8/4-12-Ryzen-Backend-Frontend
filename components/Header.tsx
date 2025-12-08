@@ -97,7 +97,7 @@ const Header: React.FC<HeaderProps> = ({
           className="p-2 rounded-full bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:border-zinc-300 dark:hover:border-white/20 transition-all active:scale-95 shadow-sm"
           title={isDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
         >
-          {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
+          {isDarkMode ? <Sun size={16} /> : <Moon size={16} className="text-zinc-600" />}
         </button>
         
         {/* Notifications */}

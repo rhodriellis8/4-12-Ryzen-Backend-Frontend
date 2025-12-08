@@ -15,10 +15,15 @@
     "@stripe/stripe-js": "^5.7.0",
     "@supabase/supabase-js": "^2.46.0",
     "browser-image-compression": "^2.0.2",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.555.0",
+    "motion": "^12.0.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "recharts": "^3.5.0"
+    "react-router-dom": "^7.1.1",
+    "recharts": "^3.5.0",
+    "sonner": "^1.7.1",
+    "tailwind-merge": "^2.5.5"
   },
   "devDependencies": {
     "@types/node": "^22.14.0",

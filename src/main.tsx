@@ -1,33 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import App from '../App';
 import ResetPasswordView from '../components/ResetPasswordView';
+import './index.css';
 
-// Simple path-based router
-const Router: React.FC = () => {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-    };
-
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  const navigateToHome = () => {
-    window.history.pushState({}, '', '/');
-    setCurrentPath('/');
-  };
-
-  // Handle password reset route
-  if (currentPath === '/reset-password' || currentPath.startsWith('/reset-password')) {
-    return <ResetPasswordView onComplete={navigateToHome} />;
-  }
-
-  // Default: render main app
-  return <App />;
+const ResetPasswordWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return <ResetPasswordView onComplete={() => navigate('/')} />;
 };
 
 const rootElement = document.getElementById('root');
@@ -37,6 +17,11 @@ if (!rootElement) {
 
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
-    <Router />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/reset-password" element={<ResetPasswordWrapper />} />
+        <Route path="*" element={<App />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>
 );

@@ -10,12 +10,12 @@ interface SettingsViewProps {
 const SettingsView: React.FC<SettingsViewProps> = ({ isDarkMode, setIsDarkMode }) => {
   return (
     <div className="max-w-3xl pb-10">
-      <h2 className="text-2xl font-geist font-light text-zinc-900 dark:text-white mb-8">Settings</h2>
+      <h2 className="text-2xl font-bold font-geist text-zinc-900 dark:text-white mb-8">Settings</h2>
 
       <div className="space-y-6">
         {/* Appearance Section */}
         <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-xl p-6 shadow-sm">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
                 <Sun size={20} className="text-zinc-500" />
                 Appearance
             </h3>
@@ -45,7 +45,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ isDarkMode, setIsDarkMode }
 
         {/* Profile Section */}
         <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-xl p-6 shadow-sm">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
                 <User size={20} className="text-zinc-500" />
                 Profile Information
             </h3>
@@ -63,7 +63,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ isDarkMode, setIsDarkMode }
 
         {/* Notifications (Dummy) */}
         <div className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-xl p-6 opacity-75 shadow-sm">
-            <h3 className="text-lg font-medium text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-zinc-900 dark:text-zinc-100 mb-4 flex items-center gap-2">
                 <Bell size={20} className="text-zinc-500" />
                 Notifications
             </h3>

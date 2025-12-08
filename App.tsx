@@ -9,6 +9,8 @@ import NotebookView from './components/NotebookView';
 import TradesView from './components/TradesView';
 import TasksView from './components/TasksView';
 import SettingsView from './components/SettingsView';
+import ProfileView from './components/ProfileView';
+import SubscriptionView from './components/SubscriptionView';
 import LoginView from './components/LoginView';
 import PricingView from './components/PricingView';
 import AccountManagerModal from './components/AccountManagerModal';
@@ -17,7 +19,7 @@ import * as dataService from './lib/dataService';
 import type { Session } from '@supabase/supabase-js';
 import type { JournalEntry, Playbook, Notebook, NotebookPage } from './types/data';
 
-export type ViewState = 'dashboard' | 'trades' | 'journal' | 'notebook' | 'playbooks' | 'tasks' | 'settings' | 'pricing';
+export type ViewState = 'dashboard' | 'trades' | 'journal' | 'notebook' | 'playbooks' | 'tasks' | 'settings' | 'pricing' | 'profile' | 'subscription';
 
 const REMEMBER_KEY = 'ryzen_remember_until';
 
@@ -132,6 +134,12 @@ const App: React.FC = () => {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     setCurrentView('dashboard');
+  };
+
+  const handleUpdateProfile = async (data: any) => {
+    const { error } = await supabase.auth.updateUser(data);
+    if (error) throw error;
+    // Session update handled by onAuthStateChange
   };
 
   // ============ JOURNAL HANDLERS ============
@@ -389,6 +397,10 @@ const App: React.FC = () => {
         );
       case 'settings':
         return <SettingsView isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />;
+      case 'profile':
+        return <ProfileView user={session?.user} onUpdateProfile={handleUpdateProfile} />;
+      case 'subscription':
+        return <SubscriptionView />;
       case 'pricing':
         return <PricingView />;
       default:
@@ -408,18 +420,23 @@ const App: React.FC = () => {
   const activeAccount = accounts.find(a => a.id === activeAccountId);
 
   return (
-    <div className="min-h-screen flex antialiased bg-zinc-50 dark:bg-black text-zinc-900 dark:text-zinc-200 overflow-hidden selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-black dark:selection:text-white transition-colors duration-300">
+    <div className="min-h-screen flex antialiased bg-white dark:bg-black text-zinc-900 dark:text-zinc-200 overflow-hidden selection:bg-zinc-200 dark:selection:bg-zinc-800 selection:text-black dark:selection:text-white">
       {/* Sidebar Navigation */}
       <Sidebar 
         currentView={currentView} 
         onNavigate={setCurrentView} 
         onLogout={handleLogout}
+        user={session?.user ? {
+            name: session.user.user_metadata?.full_name || 'User',
+            email: session.user.email || '',
+            avatar: session.user.user_metadata?.avatar_url
+        } : undefined}
       />
 
       {/* Main Content Area */}
       <main className="flex-1 relative h-screen overflow-y-auto bg-grid scroll-smooth">
         {/* Background Glow */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-zinc-200/50 dark:from-zinc-900/20 to-transparent pointer-events-none transition-colors duration-300"></div>
+        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-white dark:from-zinc-900/20 to-transparent pointer-events-none"></div>
 
         <div className="relative z-10 flex flex-col min-h-screen">
             <Header 
@@ -432,9 +449,7 @@ const App: React.FC = () => {
             />
             
             <div className="flex-1 px-8 pt-4 pb-20 max-w-7xl mx-auto w-full">
-                <div key={currentView} className="animate-in fade-in duration-300">
-                    {renderView()}
-                </div>
+                {renderView()}
             </div>
         </div>
       </main>

@@ -16,8 +16,8 @@ const Hero: React.FC = () => {
   return (
     <div className="mt-4">
       <div className="mb-8">
-        <h1 className="text-3xl font-light tracking-tight text-zinc-900 dark:text-white font-geist mb-2">
-            Welcome back, <span className="font-medium">John</span>
+        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white font-geist mb-2">
+            Welcome back, <span className="text-emerald-500">John</span>
         </h1>
         <p className="text-zinc-500 dark:text-zinc-400">Here's what's happening in your trading workspace today.</p>
       </div>
@@ -58,7 +58,7 @@ const Hero: React.FC = () => {
         <div className="lg:col-span-2 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 relative overflow-hidden group hover:bg-white dark:hover:bg-zinc-900 transition-all">
             <div className="flex justify-between items-center mb-6 relative z-10">
                 <div>
-                    <h3 className="text-lg font-medium text-zinc-900 dark:text-white font-geist">Equity Curve</h3>
+                    <h3 className="text-lg font-bold text-zinc-900 dark:text-white font-geist">Equity Curve</h3>
                     <p className="text-xs text-zinc-500">Real-time performance tracking</p>
                 </div>
                 <div className="flex gap-2">
@@ -93,7 +93,7 @@ const Hero: React.FC = () => {
             <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                 <div className="flex items-center gap-2 mb-4">
                     <Zap size={16} className="text-amber-500" />
-                    <h3 className="font-medium text-zinc-900 dark:text-white">Focus Playbook</h3>
+                    <h3 className="font-bold text-zinc-900 dark:text-white">Focus Playbook</h3>
                 </div>
                 <div className="space-y-3">
                     <div className="p-3 rounded-lg bg-zinc-100 dark:bg-zinc-800/50 border border-zinc-200 dark:border-white/5">
@@ -113,7 +113,7 @@ const Hero: React.FC = () => {
             <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                  <div className="flex items-center gap-2 mb-4">
                     <Clock size={16} className="text-zinc-400" />
-                    <h3 className="font-medium text-zinc-900 dark:text-white">Recent Log</h3>
+                    <h3 className="font-bold text-zinc-900 dark:text-white">Recent Log</h3>
                 </div>
                 <div className="space-y-4">
                     <div className="flex items-start gap-3">

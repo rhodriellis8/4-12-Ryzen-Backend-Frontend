@@ -39,12 +39,12 @@
         
         /* Light Mode Button Colors */
         --btn-bg: #ffffff;
-        --btn-text: #1e1b4b; /* Dark Indigo Text */
+        --btn-text: #18181b; /* Zinc 900 */
 
         /* Light Mode Shiny CTA specific */
-        --shiny-border: #818cf8; /* Indigo 400 */
-        --shiny-main: #6366f1;   /* Indigo 500 */
-        --shiny-shine: #c7d2fe;  /* Indigo 200 */
+        --shiny-border: #d4d4d8; /* Zinc 300 */
+        --shiny-main: #3b82f6;   /* Blue 500 */
+        --shiny-shine: #93c5fd;  /* Blue 300 */
       }
       .dark {
         --color-accent: #ffffff; /* White Cursor for Dark Mode */
@@ -74,9 +74,8 @@
       
       body {
         font-family: var(--font-manrope);
-        background-color: #fafafa; /* Zinc 50 */
+        background-color: #ffffff; /* Pure White */
         color: #18181b; /* Zinc 900 */
-        transition: background-color 0.3s, color 0.3s;
         cursor: none;
       }
       .dark body {
@@ -93,9 +92,9 @@
         font-family: var(--font-mono);
       }
       .glass-panel {
-        background: rgba(255, 255, 255, 0.6);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
-        border: 1px solid rgba(0, 0, 0, 0.05);
+        border: 1px solid rgba(0, 0, 0, 0.08);
         transition: background-color 0.3s, border-color 0.3s;
       }
       .dark .glass-panel {
@@ -105,8 +104,8 @@
       }
       .bg-grid {
         background-size: 40px 40px;
-        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        background-image: linear-gradient(to right, rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
       }
       .dark .bg-grid {
         background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
