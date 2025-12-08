@@ -85,17 +85,15 @@ export default function ProfileDropdown({
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-3 p-2 rounded-lg bg-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors w-full text-left"
             >
-                <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-500 via-pink-500 to-orange-400 p-0.5 shrink-0">
-                    <div className="w-full h-full rounded-full overflow-hidden bg-white dark:bg-zinc-900">
-                        <img 
-                            src={data.avatar} 
-                            alt={data.name} 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=random`;
-                            }}
-                        />
-                    </div>
+                <div className="w-9 h-9 rounded-full overflow-hidden bg-white dark:bg-zinc-900 shrink-0">
+                    <img 
+                        src={data.avatar} 
+                        alt={data.name} 
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).src = `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=random`;
+                        }}
+                    />
                 </div>
                 <div className="flex-1 min-w-0">
                     <div className="text-sm font-medium text-zinc-900 dark:text-zinc-100 truncate leading-tight">

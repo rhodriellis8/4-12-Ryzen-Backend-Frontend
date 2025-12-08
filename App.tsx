@@ -396,7 +396,12 @@ const App: React.FC = () => {
           />
         );
       case 'settings':
-        return <SettingsView isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />;
+        return <SettingsView 
+          isDarkMode={isDarkMode} 
+          setIsDarkMode={setIsDarkMode} 
+          user={session?.user} 
+          onUpdateProfile={handleUpdateProfile}
+        />;
       case 'profile':
         return <ProfileView user={session?.user} onUpdateProfile={handleUpdateProfile} />;
       case 'subscription':

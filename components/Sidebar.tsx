@@ -1,16 +1,13 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { 
   LayoutGrid, 
   ScrollText, 
   Book, 
   Layers, 
-  Settings,
   CandlestickChart,
-  LogOut,
   ListChecks
 } from 'lucide-react';
 import { ViewState } from '../App';
-
 import ProfileDropdown from './ProfileDropdown';
 
 interface SidebarProps {
@@ -24,13 +21,38 @@ interface SidebarProps {
   };
 }
 
+const NAV_ITEMS: { id: string; value: ViewState; label: string; icon: React.ReactNode }[] = [
+  { id: 'nav-dashboard', value: 'dashboard', label: 'Dashboard', icon: <LayoutGrid size={18} /> },
+  { id: 'nav-trades', value: 'trades', label: 'Trades', icon: <CandlestickChart size={18} /> },
+  { id: 'nav-journal', value: 'journal', label: 'Journal', icon: <ScrollText size={18} /> },
+  { id: 'nav-notebook', value: 'notebook', label: 'Notebooks', icon: <Book size={18} /> },
+  { id: 'nav-playbooks', value: 'playbooks', label: 'Playbooks', icon: <Layers size={18} /> },
+  { id: 'nav-tasks', value: 'tasks', label: 'Tasks', icon: <ListChecks size={18} /> },
+];
+
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, user }) => {
+  const activeIndex = useMemo(() => {
+    return NAV_ITEMS.findIndex(item => item.value === currentView);
+  }, [currentView]);
+
+  // Calculate glider position: activeIndex * 100% of item height
+  // If activeIndex is -1 (not in list, e.g. settings), hide glider or keep it at 0?
+  // We'll hide it by opacity if activeIndex is -1
+  const showGlider = activeIndex !== -1;
+
   return (
-    <aside className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
-      <div className="p-6">
+    <aside 
+      className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50"
+      style={{ 
+        "--main-color": "#ffffff", 
+        "--main-color-opacity": "rgba(255, 255, 255, 0.1)", 
+        "--total-radio": NAV_ITEMS.length 
+      } as React.CSSProperties}
+    >
+      <div className="p-6 pb-2">
         {/* Logo */}
         <div 
-          className="flex items-center gap-3 mb-10 group cursor-pointer"
+          className="flex items-center gap-3 mb-8 group cursor-pointer px-2"
           onClick={() => onNavigate('dashboard')}
         >
           <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold font-geist tracking-tighter text-sm group-hover:scale-105 transition-transform duration-300 shadow-lg dark:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
@@ -42,44 +64,48 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
         </div>
 
         {/* Navigation Links */}
-        <nav className="space-y-1">
-          <NavItem 
-            icon={<LayoutGrid size={18} />} 
-            label="Dashboard" 
-            active={currentView === 'dashboard'} 
-            onClick={() => onNavigate('dashboard')}
-          />
-           <NavItem 
-            icon={<CandlestickChart size={18} />} 
-            label="Trades" 
-            active={currentView === 'trades'} 
-            onClick={() => onNavigate('trades')}
-          />
-          <NavItem 
-            icon={<ScrollText size={18} />} 
-            label="Journal" 
-            active={currentView === 'journal'} 
-            onClick={() => onNavigate('journal')}
-          />
-          <NavItem 
-            icon={<Book size={18} />} 
-            label="Notebooks" 
-            active={currentView === 'notebook'} 
-            onClick={() => onNavigate('notebook')}
-          />
-          <NavItem 
-            icon={<Layers size={18} />} 
-            label="Playbooks" 
-            active={currentView === 'playbooks'} 
-            onClick={() => onNavigate('playbooks')}
-          />
-          <NavItem 
-            icon={<ListChecks size={18} />} 
-            label="Tasks" 
-            active={currentView === 'tasks'} 
-            onClick={() => onNavigate('tasks')}
-          />
-        </nav>
+        <div className="relative flex flex-col pl-2 pr-2">
+          {/* Glider Track */}
+          <div className="absolute left-2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-zinc-200 dark:via-zinc-800 to-transparent pointer-events-none" />
+
+          {/* Glider */}
+          <div 
+            className="absolute left-2 w-full pointer-events-none transition-all duration-500 cubic-bezier(0.37, 1.95, 0.66, 0.56)"
+            style={{
+              height: `${100 / NAV_ITEMS.length}%`,
+              top: 0,
+              transform: `translateY(${activeIndex * 100}%)`,
+              opacity: showGlider ? 1 : 0,
+            }}
+          >
+            <div className="relative w-full h-full">
+               {/* Glider Line */}
+               <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-zinc-900 dark:via-white to-transparent" />
+               {/* Glow Effect */}
+               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[150px] h-[60%] bg-zinc-900/10 dark:bg-white/10 blur-md rounded-full -z-10" />
+            </div>
+          </div>
+
+          {/* Items */}
+          {NAV_ITEMS.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => onNavigate(item.value)}
+              className={`
+                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300
+                ${currentView === item.value 
+                  ? 'text-zinc-900 dark:text-white bg-zinc-100/50 dark:bg-white/5' 
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-white/5'
+                }
+              `}
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                {item.icon}
+                {item.label}
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="p-4 border-t border-zinc-200 dark:border-white/5">
@@ -97,29 +123,5 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
     </aside>
   );
 };
-
-interface NavItemProps {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-  onClick: () => void;
-}
-
-const NavItem: React.FC<NavItemProps> = ({ icon, label, active, onClick }) => (
-  <button
-    onClick={onClick}
-    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-md group ${
-      active
-        ? 'bg-zinc-200/50 dark:bg-zinc-900/50 text-zinc-900 dark:text-zinc-100 border border-zinc-300/50 dark:border-zinc-800/50 shadow-sm'
-        : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-900/30'
-    }`}
-  >
-    {React.cloneElement(icon as React.ReactElement<any>, {
-      className: active ? 'text-zinc-900 dark:text-zinc-100' : 'group-hover:text-zinc-700 dark:group-hover:text-zinc-200 transition-colors',
-      size: 16
-    })}
-    <span className="text-sm font-medium">{label}</span>
-  </button>
-);
 
 export default Sidebar;

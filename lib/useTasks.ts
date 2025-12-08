@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from './supabaseClient';
 
-export type TaskColumnId = 'backlog' | 'this_week' | 'in_progress' | 'review' | 'completed';
+export type TaskColumnId = 'planned' | 'in_progress' | 'completed' | 'on_hold';
 export type TaskPriority = 'low' | 'medium' | 'high';
 export type TaskFrequency = 'weekly' | 'monthly' | null;
 
@@ -20,6 +20,8 @@ export interface Task {
   linked_journal_id: string | null;
   linked_notebook_id: string | null;
   result_notes: string | null;
+  attachment_count?: number;
+  comment_count?: number;
   is_recurring: boolean;
   recurring_frequency: TaskFrequency;
   created_at: string;
@@ -102,7 +104,7 @@ export const useTasks = ({ userId }: UseTasksOptions) => {
     }
   ): Promise<Task | null> => {
     if (!userId) return null;
-    const column_id = partial.column_id ?? 'backlog';
+    const column_id = partial.column_id ?? 'planned';
     const position = getNextPosition(column_id);
     const payload = {
       ...partial,
@@ -231,6 +233,45 @@ export const useTasks = ({ userId }: UseTasksOptions) => {
     await updateTask(taskId, updates);
   };
 
+  const moveTaskOptimistic = (
+    taskId: string,
+    toColumn: TaskColumnId,
+    newIndex: number
+  ) => {
+    setByColumn((prev) => {
+      const sourceColumn = Object.keys(prev).find((col) =>
+        (prev[col] ?? []).some((task) => task.id === taskId)
+      ) as TaskColumnId | undefined;
+
+      if (!sourceColumn) return prev;
+
+      const task = prev[sourceColumn].find((t) => t.id === taskId);
+      if (!task) return prev;
+
+      // Remove from source
+      const sourceTasks = [...(prev[sourceColumn] ?? [])].filter((t) => t.id !== taskId);
+      
+      // Add to target
+      // If moving within same column, sourceTasks is the list without the item.
+      // We need to insert into sourceTasks if source==target.
+      const targetTasks = sourceColumn === toColumn ? sourceTasks : [...(prev[toColumn] ?? [])];
+
+      targetTasks.splice(newIndex, 0, { ...task, column_id: toColumn });
+
+      const rePos = (tasks: Task[]) =>
+        tasks.map((t, idx) => ({
+          ...t,
+          position: idx + 1,
+        }));
+
+      return {
+        ...prev,
+        [sourceColumn]: rePos(sourceTasks),
+        [toColumn]: rePos(targetTasks),
+      };
+    });
+  };
+
   const completeTask = async (id: string, resultNotes?: string | null) => {
     const allTasks = Object.values(byColumn).flat();
     const task = allTasks.find((t) => t.id === id);
@@ -258,7 +299,7 @@ export const useTasks = ({ userId }: UseTasksOptions) => {
       };
 
       const defaultColumn: TaskColumnId =
-        task.recurring_frequency === 'weekly' ? 'this_week' : 'backlog';
+        task.recurring_frequency === 'weekly' ? 'planned' : 'planned';
 
       await createTask({
         ...base,
@@ -276,6 +317,7 @@ export const useTasks = ({ userId }: UseTasksOptions) => {
     updateTask,
     deleteTask,
     moveTask,
+    moveTaskOptimistic,
     completeTask,
   };
 };

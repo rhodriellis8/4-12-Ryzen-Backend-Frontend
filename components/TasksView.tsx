@@ -9,6 +9,7 @@ import {
   useSensors,
   type DragStartEvent,
   type DragEndEvent,
+  type DragOverEvent,
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -34,6 +35,9 @@ import {
   FileText,
   BookOpen,
   TrendingUp,
+  Paperclip,
+  MessageSquare,
+  ChevronDown,
 } from 'lucide-react';
 import { useTasks, type Task, type TaskColumnId, type TaskPriority, type TaskFrequency } from '../lib/useTasks';
 
@@ -58,11 +62,10 @@ interface CompletionModalData {
 // ==================== CONSTANTS ====================
 
 const COLUMNS: { id: TaskColumnId; label: string; icon: React.ReactNode }[] = [
-  { id: 'backlog', label: 'Backlog', icon: <ListChecks size={14} /> },
-  { id: 'this_week', label: 'This Week', icon: <Calendar size={14} /> },
+  { id: 'backlog', label: 'Planned', icon: <ListChecks size={14} /> },
   { id: 'in_progress', label: 'In Progress', icon: <Clock size={14} /> },
-  { id: 'review', label: 'Review', icon: <AlertCircle size={14} /> },
   { id: 'completed', label: 'Completed', icon: <CheckCircle2 size={14} /> },
+  { id: 'review', label: 'On Hold', icon: <AlertCircle size={14} /> },
 ];
 
 const TASK_TYPES = [
@@ -160,6 +163,13 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
       <div className="pl-4">
         {/* Title */}
         <h4 className="text-sm font-medium text-zinc-200 truncate pr-6">{task.title}</h4>
+        
+        {/* Description (Optional) */}
+        {task.description && (
+          <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-snug">
+            {task.description}
+          </p>
+        )}
 
         {/* Type tag + Priority */}
         <div className="flex items-center gap-2 mt-2">
@@ -172,9 +182,9 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
           {task.is_recurring && <RefreshCw size={12} className="text-purple-400" />}
         </div>
 
-        {/* Due date + Links */}
-        <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center gap-1">
+        {/* Due date + Links + Counters */}
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center gap-3">
             {task.due_date && (
               <span
                 className={`text-[10px] flex items-center gap-1 ${
@@ -189,7 +199,26 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                 {formatDueDate(task.due_date)}
               </span>
             )}
+            
+            {/* Metadata Counters */}
+            {(task.attachment_count && task.attachment_count > 0) || (task.comment_count && task.comment_count > 0) ? (
+              <div className="flex items-center gap-2">
+                {task.attachment_count && task.attachment_count > 0 && (
+                  <div className="flex items-center gap-0.5 text-[10px] text-zinc-500">
+                    <Paperclip size={10} />
+                    <span>{task.attachment_count}</span>
+                  </div>
+                )}
+                {task.comment_count && task.comment_count > 0 && (
+                  <div className="flex items-center gap-0.5 text-[10px] text-zinc-500">
+                    <MessageSquare size={10} />
+                    <span>{task.comment_count}</span>
+                  </div>
+                )}
+              </div>
+            ) : null}
           </div>
+
           {hasLinks && (
             <div className="flex items-center gap-1">
               {task.linked_playbook_id && (
@@ -262,8 +291,13 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
 // ==================== TASK CARD (for overlay) ====================
 
 const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => (
-  <div className="bg-zinc-800 border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-64">
+  <div className="bg-zinc-800/90 backdrop-blur-sm border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
     <h4 className="text-sm font-medium text-zinc-200 truncate">{task.title}</h4>
+    {task.description && (
+      <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-snug">
+        {task.description}
+      </p>
+    )}
     <div className="flex items-center gap-2 mt-2">
       <span className={`text-[10px] px-2 py-0.5 rounded-full border ${getTaskTypeStyle(task.task_type)}`}>
         {getTaskTypeLabel(task.task_type)}
@@ -350,7 +384,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
   const [taskType, setTaskType] = useState(data.task?.task_type ?? 'other');
   const [priority, setPriority] = useState<TaskPriority>(data.task?.priority ?? 'low');
   const [dueDate, setDueDate] = useState(data.task?.due_date ?? '');
-  const [columnId, setColumnId] = useState<TaskColumnId>(data.task?.column_id ?? data.defaultColumn ?? 'backlog');
+  const [columnId, setColumnId] = useState<TaskColumnId>(data.task?.column_id ?? data.defaultColumn ?? 'planned');
   const [isRecurring, setIsRecurring] = useState(data.task?.is_recurring ?? false);
   const [recurringFrequency, setRecurringFrequency] = useState<TaskFrequency>(data.task?.recurring_frequency ?? null);
   const [saving, setSaving] = useState(false);
@@ -631,13 +665,15 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
 // ==================== MAIN COMPONENT ====================
 
 const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
-  const { byColumn, loading, error, createTask, updateTask, deleteTask, moveTask, completeTask } = useTasks({
+  const { byColumn, loading, error, createTask, updateTask, deleteTask, moveTask, moveTaskOptimistic, completeTask } = useTasks({
     userId,
   });
 
   const [taskModal, setTaskModal] = useState<TaskModalData | null>(null);
   const [completionModal, setCompletionModal] = useState<CompletionModalData | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [activeStartColumn, setActiveStartColumn] = useState<TaskColumnId | null>(null);
+
 
   // Filters
   const [typeFilter, setTypeFilter] = useState<string>('');
@@ -657,10 +693,9 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
   // Filtered tasks per column
   const filteredByColumn = useMemo(() => {
     const result: Record<TaskColumnId, Task[]> = {
-      backlog: [],
-      this_week: [],
+      planned: [],
       in_progress: [],
-      review: [],
+      on_hold: [],
       completed: [],
     };
 
@@ -683,7 +718,56 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
   }, [activeId, byColumn]);
 
   const handleDragStart = (event: DragStartEvent) => {
-    setActiveId(event.active.id as string);
+    const { active } = event;
+    setActiveId(active.id as string);
+    const startColumn = Object.keys(byColumn).find((col) =>
+      (byColumn[col] ?? []).some((t) => t.id === active.id)
+    ) as TaskColumnId | undefined;
+    setActiveStartColumn(startColumn || null);
+  };
+
+  const handleDragOver = (event: DragOverEvent) => {
+    const { active, over } = event;
+    if (!over) return;
+
+    const activeId = active.id as string;
+    const overId = over.id as string;
+
+    // Find active task's current column
+    const activeColumn = Object.keys(byColumn).find((col) =>
+      (byColumn[col] ?? []).some((t) => t.id === activeId)
+    ) as TaskColumnId | undefined;
+
+    // Find over column
+    let overColumn: TaskColumnId | undefined;
+    if (COLUMNS.some((c) => c.id === overId)) {
+      overColumn = overId as TaskColumnId;
+    } else {
+      overColumn = Object.keys(byColumn).find((col) =>
+        (byColumn[col] ?? []).some((t) => t.id === overId)
+      ) as TaskColumnId | undefined;
+    }
+
+    if (!activeColumn || !overColumn || activeColumn === overColumn) {
+      return;
+    }
+
+    // Calculate new index
+    const overTasks = byColumn[overColumn] ?? [];
+    let newIndex = overTasks.length;
+
+    if (!COLUMNS.some((c) => c.id === overId)) {
+      const overIndex = overTasks.findIndex((t) => t.id === overId);
+      const isBelowOverItem =
+        over &&
+        active.rect.current.translated &&
+        active.rect.current.translated.top > over.rect.top + over.rect.height;
+
+      const modifier = isBelowOverItem ? 1 : 0;
+      newIndex = overIndex >= 0 ? overIndex + modifier : overTasks.length;
+    }
+
+    moveTaskOptimistic(activeId, overColumn, newIndex);
   };
 
   const handleDragEnd = async (event: DragEndEvent) => {
@@ -694,13 +778,13 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
 
     const activeTaskId = active.id as string;
     const overId = over.id as string;
+    const sourceColumn = activeStartColumn;
 
-    // Find source column
-    const sourceColumn = COLUMNS.find((col) =>
-      (byColumn[col.id] ?? []).some((t) => t.id === activeTaskId)
-    )?.id;
-
-    if (!sourceColumn) return;
+    if (!sourceColumn) {
+        setActiveId(null);
+        setActiveStartColumn(null);
+        return;
+    }
 
     // Determine target column
     let targetColumn: TaskColumnId = sourceColumn;
@@ -712,6 +796,8 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
       newIndex = (filteredByColumn[targetColumn] ?? []).length;
     } else {
       // Dropped on another task
+      // Note: we look in byColumn which might have been optimistically updated,
+      // but overId should still map to a valid column.
       const targetTask = Object.values(byColumn).flat().find((t) => t.id === overId);
       if (targetTask) {
         targetColumn = targetTask.column_id;
@@ -723,14 +809,20 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
 
     // If moving to completed column, show completion modal
     if (targetColumn === 'completed' && sourceColumn !== 'completed') {
-      const task = (byColumn[sourceColumn] ?? []).find((t) => t.id === activeTaskId);
+      const task = (byColumn[sourceColumn] ?? []).find((t) => t.id === activeTaskId) || 
+                   Object.values(byColumn).flat().find(t => t.id === activeTaskId); // fallback
+      
       if (task) {
         setCompletionModal({ taskId: activeTaskId, taskTitle: task.title });
+        setActiveId(null);
+        setActiveStartColumn(null);
         return;
       }
     }
 
     await moveTask(activeTaskId, targetColumn, newIndex);
+    setActiveId(null);
+    setActiveStartColumn(null);
   };
 
   const handleCreateTask = async (taskData: Partial<Task>) => {
@@ -784,11 +876,11 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
         </div>
         <div className="flex items-center gap-3">
           {/* Type Filter */}
-          <div className="relative">
+          <div className="relative group">
             <select
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-shadow cursor-pointer shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/80"
+              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-all cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"
             >
               <option value="">All Types</option>
               {TASK_TYPES.map((t) => (
@@ -797,19 +889,17 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
                 </option>
               ))}
             </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1L5 5L9 1" />
-              </svg>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200 transition-colors">
+              <ChevronDown size={14} />
             </div>
           </div>
 
           {/* Priority Filter */}
-          <div className="relative">
+          <div className="relative group">
             <select
               value={priorityFilter}
               onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
-              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-300 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-shadow cursor-pointer shadow-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/80"
+              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-all cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"
             >
               <option value="">All Priorities</option>
               {PRIORITIES.map((p) => (
@@ -818,19 +908,17 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
                 </option>
               ))}
             </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 1L5 5L9 1" />
-              </svg>
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200 transition-colors">
+              <ChevronDown size={14} />
             </div>
           </div>
 
           {/* New Task Button */}
           <button
             onClick={() => setTaskModal({ mode: 'create' })}
-            className="flex items-center gap-2 px-5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold rounded-xl transition-all shadow-sm hover:shadow-md active:scale-95"
+            className="flex items-center gap-2 px-4 py-2 bg-zinc-900 dark:bg-white hover:bg-zinc-800 dark:hover:bg-zinc-200 text-white dark:text-black text-xs font-semibold rounded-lg transition-all shadow-sm hover:shadow active:scale-95 border border-transparent"
           >
-            <Plus size={18} strokeWidth={2.5} />
+            <Plus size={14} strokeWidth={2.5} />
             New Task
           </button>
         </div>
@@ -842,6 +930,7 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
           sensors={sensors}
           collisionDetection={closestCorners}
           onDragStart={handleDragStart}
+          onDragOver={handleDragOver}
           onDragEnd={handleDragEnd}
         >
           <div className="flex gap-4 pb-4 min-w-max">
