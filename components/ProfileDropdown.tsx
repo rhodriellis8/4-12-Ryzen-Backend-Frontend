@@ -113,7 +113,7 @@ export default function ProfileDropdown({
             </button>
 
             {isOpen && (
-                <div className="absolute bottom-full left-0 mb-2 w-64 bg-white/95 dark:bg-zinc-900/95 backdrop-blur-sm border border-zinc-200/60 dark:border-zinc-800/60 rounded-2xl shadow-xl shadow-zinc-900/5 dark:shadow-zinc-950/20 p-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left">
+                <div className="absolute bottom-full left-0 mb-2 w-64 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl shadow-zinc-900/5 dark:shadow-zinc-950/20 p-2 z-50 animate-in fade-in zoom-in-95 duration-200 origin-bottom-left">
                     <div className="space-y-1">
                         {menuItems.map((item) => (
                             <button

@@ -77,7 +77,7 @@ const CalendarWidget: React.FC = () => {
   const nextMonth = () => setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
 
   return (
-    <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm overflow-hidden">
+    <div className="rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
       <div className="p-6 border-b border-zinc-200 dark:border-white/5 flex items-center justify-between bg-white dark:bg-zinc-900">
         <div>
             <h2 className="text-lg font-medium text-zinc-900 dark:text-white font-geist">Trading Calendar</h2>

@@ -63,7 +63,7 @@ const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 flex items-center justify-between px-8 py-6 bg-transparent backdrop-blur-sm">
+    <header className="sticky top-0 z-40 flex items-center justify-between px-8 py-6 bg-white/80 dark:bg-black/80">
       <div className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-500">
         <span className="hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors cursor-pointer" onClick={() => onNavigate('dashboard')}>Ryzen</span>
         <ChevronRight size={14} className="text-zinc-400 dark:text-zinc-700" />
@@ -81,15 +81,11 @@ const Header: React.FC<HeaderProps> = ({
         </button>
 
         <button 
-          className="shiny-cta focus:outline-none"
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-black text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors duration-200 shadow-sm"
           onClick={() => onNavigate('pricing')}
         >
-          <span>
-            <div className="flex items-center gap-2">
-              <Sparkles size={12} />
-              Pricing
-            </div>
-          </span>
+          <Sparkles size={12} />
+          Pricing
         </button>
 
         <button 

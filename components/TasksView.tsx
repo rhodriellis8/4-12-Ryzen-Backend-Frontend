@@ -289,7 +289,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
 // ==================== TASK CARD (for overlay) ====================
 
 const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => (
-  <div className="bg-white dark:bg-zinc-800/90 backdrop-blur-sm border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
+  <div className="bg-white dark:bg-zinc-800 border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
     <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">{task.title}</h4>
     {task.description && (
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2 leading-snug">
@@ -406,7 +406,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
       <div className="w-full max-w-lg bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-100 dark:border-zinc-800/50">
@@ -581,7 +581,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
   const [notes, setNotes] = useState('');
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <div className="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden">
         <div className="flex items-center justify-between px-6 py-4 bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-900/30 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2">

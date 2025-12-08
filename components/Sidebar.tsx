@@ -49,13 +49,70 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
         "--total-radio": NAV_ITEMS.length 
       } as React.CSSProperties}
     >
+      <style dangerouslySetInnerHTML={{ __html: `
+        .glider-container {
+          position: absolute;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          width: 1px;
+          pointer-events: none;
+          background: linear-gradient(0deg,
+              rgba(0, 0, 0, 0) 0%,
+              rgba(27, 27, 27, 0.2) 50%,
+              rgba(0, 0, 0, 0) 100%);
+        }
+        
+        /* Dark mode override for track */
+        .dark .glider-container {
+           background: linear-gradient(0deg,
+              rgba(0, 0, 0, 0) 0%,
+              rgba(255, 255, 255, 0.2) 50%,
+              rgba(0, 0, 0, 0) 100%);
+        }
+
+        .glider-track {
+          position: relative;
+          height: calc(100% / var(--total-radio));
+          width: 100%;
+          transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56);
+          pointer-events: none;
+        }
+
+        .glider-track::before {
+          content: "";
+          position: absolute;
+          height: 60%;
+          width: 2px;
+          top: 50%;
+          left: 0;
+          transform: translateY(-50%);
+          background: var(--main-color);
+          z-index: 10;
+          box-shadow: 0 0 10px var(--main-color);
+        }
+        
+        .glider-track::after {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          width: 150px;
+          background: linear-gradient(90deg,
+              var(--main-color-opacity) 0%,
+              rgba(0, 0, 0, 0) 100%);
+          z-index: 0;
+        }
+      `}} />
+
       <div className="p-6 pb-2">
         {/* Logo */}
         <div 
           className="flex items-center gap-3 mb-8 group cursor-pointer px-2"
           onClick={() => onNavigate('dashboard')}
         >
-          <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold font-geist tracking-tighter text-sm group-hover:scale-105 transition-transform duration-300 shadow-lg dark:shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+          <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold font-geist tracking-tighter text-sm group-hover:scale-105 transition-transform duration-200 shadow-md">
             R
           </div>
           <span className="font-geist font-medium text-sm tracking-tight text-zinc-900 dark:text-zinc-100">
@@ -65,26 +122,15 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
 
         {/* Navigation Links */}
         <div className="relative flex flex-col pl-2 pr-2">
-          {/* Glider Track */}
-          <div className="absolute left-2 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-zinc-200 dark:via-zinc-800 to-transparent pointer-events-none" />
-
-          {/* Glider */}
-          <div 
-            className="absolute left-2 w-full pointer-events-none will-change-transform"
-            style={{
-              height: `${100 / NAV_ITEMS.length}%`,
-              top: 0,
-              transform: `translateY(${activeIndex * 100}%) translateZ(0)`,
-              opacity: showGlider ? 1 : 0,
-              transition: 'transform 0.4s ease-out, opacity 0.2s ease-out',
-            }}
-          >
-            <div className="relative w-full h-full">
-               {/* Glider Line */}
-               <div className="absolute left-0 top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-zinc-900 dark:via-white to-transparent" />
-               {/* Glow Effect */}
-               <div className="absolute left-0 top-1/2 -translate-y-1/2 w-[150px] h-[60%] bg-zinc-900/10 dark:bg-white/10 blur-md rounded-full -z-10" />
-            </div>
+          {/* Glider Container (Track + Moving Glider) */}
+          <div className="glider-container">
+             <div 
+               className="glider-track"
+               style={{
+                 transform: activeIndex !== -1 ? `translateY(${activeIndex * 100}%)` : 'translateY(-100%)',
+                 opacity: activeIndex !== -1 ? 1 : 0,
+               }}
+             />
           </div>
 
           {/* Items */}
@@ -93,10 +139,10 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
               key={item.id}
               onClick={() => onNavigate(item.value)}
               className={`
-                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors duration-200
+                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors duration-200 z-10
                 ${currentView === item.value 
-                  ? 'text-zinc-900 dark:text-white bg-zinc-100/50 dark:bg-white/5' 
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-white/5'
+                  ? 'text-zinc-900 dark:text-white bg-zinc-100/10 dark:bg-white/5' 
+                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50/50 dark:hover:bg-white/5'
                 }
               `}
             >

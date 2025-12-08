@@ -153,7 +153,7 @@ const Hero: React.FC<HeroProps> = ({ userName }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Chart Widget */}
-        <div className="lg:col-span-2 border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 relative overflow-hidden group hover:bg-white dark:hover:bg-zinc-900 transition-all">
+        <div className="lg:col-span-2 rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 relative overflow-hidden group hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200">
             <div className="flex justify-between items-center mb-6 relative z-10">
                 <div>
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white font-geist">Equity Curve</h3>
@@ -186,7 +186,7 @@ const Hero: React.FC<HeroProps> = ({ userName }) => {
         {/* Side Widgets Column */}
         <div className="space-y-6">
             {/* Active Playbook Widget */}
-            <div className="border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
                 <div className="flex items-center gap-2 mb-4">
                     <Zap size={16} className="text-amber-500" />
                     <h3 className="font-bold text-zinc-900 dark:text-white">Focus Playbook</h3>
@@ -206,7 +206,7 @@ const Hero: React.FC<HeroProps> = ({ userName }) => {
             </div>
 
             {/* Recent Activity Widget */}
-            <div className="border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
                  <div className="flex items-center gap-2 mb-4">
                     <Clock size={16} className="text-zinc-400" />
                     <h3 className="font-bold text-zinc-900 dark:text-white">Recent Log</h3>
@@ -235,7 +235,7 @@ const Hero: React.FC<HeroProps> = ({ userName }) => {
 };
 
 const StatWidget: React.FC<{label: string; value: string; change: string; isPositive: boolean; icon: React.ReactNode}> = ({ label, value, change, isPositive, icon }) => (
-    <div className="h-full border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent p-5 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+    <div className="h-full rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 p-5 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
         <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                 {icon}

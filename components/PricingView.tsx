@@ -59,31 +59,31 @@ const PricingView: React.FC = () => {
   return (
     <div>
       {/* Container */}
-      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 border border-zinc-200 dark:border-transparent border-gradient before:rounded-[28px] shadow-sm dark:shadow-[0_40px_120px_rgba(0,0,0,0.95)]">
+      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-transparent dark:bg-transparent">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 relative z-10">
           <div className="max-w-xl">
              <span className="text-[10px] uppercase tracking-widest text-zinc-500 font-bold mb-2 block">Pricing</span>
-             <h2 className="text-2xl sm:text-3xl text-zinc-900 dark:text-slate-50 font-light tracking-tighter mb-3 font-geist">
+             <h2 className="text-2xl sm:text-3xl text-zinc-900 dark:text-zinc-50 font-light tracking-tighter mb-3 font-geist">
                Start tracking, <span className="font-medium">scale your growth</span>
              </h2>
-             <p className="text-sm text-zinc-500 dark:text-slate-400 leading-relaxed">
+             <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
                Choose a plan that fits your trading journey. All plans include secure data encryption, trade analytics, and performance tracking.
              </p>
           </div>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-black/70 border border-zinc-200 dark:border-white/10 rounded-full">
+          <div className="inline-flex items-center p-1 bg-zinc-100 dark:bg-zinc-900/70 border border-zinc-200 dark:border-zinc-800 rounded-full">
             <button 
               onClick={() => setBillingCycle('monthly')}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${billingCycle === 'monthly' ? 'bg-white dark:bg-slate-50 text-black dark:text-slate-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${billingCycle === 'monthly' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
             >
               Monthly
             </button>
             <button 
               onClick={() => setBillingCycle('yearly')}
-              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${billingCycle === 'yearly' ? 'bg-white dark:bg-slate-50 text-black dark:text-slate-900 shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
+              className={`px-4 py-1.5 rounded-full text-xs font-medium transition-all ${billingCycle === 'yearly' ? 'bg-white dark:bg-zinc-800 text-black dark:text-white shadow-sm' : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200'}`}
             >
               Yearly <span className="text-[9px] ml-1 text-emerald-500 font-bold">-20%</span>
             </button>
@@ -168,13 +168,13 @@ interface PricingCardProps {
 const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popular, delay, onClick, loading }: PricingCardProps) => {
     // Styling logic for Popular vs Standard cards
     const containerClasses = popular
-        ? "group relative flex flex-col rounded-2xl p-6 bg-white dark:bg-gradient-to-br dark:from-emerald-500/10 dark:via-emerald-500/5 dark:to-transparent border border-emerald-500/20 dark:border-emerald-500/50 shadow-xl shadow-emerald-500/5 dark:shadow-[0_20px_60px_rgba(16,185,129,0.2)] transition-all duration-500 hover:scale-[1.02] lg:scale-105 z-10"
-        : "group relative flex flex-col bg-white dark:bg-gradient-to-br dark:from-blue-500/5 dark:to-blue-500/0 hover:dark:from-white/10 hover:dark:to-white/0 rounded-2xl p-6 border border-zinc-200 dark:border-white/5 hover:border-zinc-300 dark:hover:border-white/20 transition-all duration-500 hover:scale-[1.02] shadow-sm hover:shadow-md dark:shadow-[0_18px_45px_rgba(0,0,0,0.8)]";
+        ? "group relative flex flex-col rounded-2xl p-6 bg-white dark:bg-zinc-900 border border-emerald-500/20 dark:border-emerald-500/50 shadow-xl shadow-emerald-500/5 dark:shadow-[0_20px_60px_rgba(16,185,129,0.2)] transition-all duration-500 hover:scale-[1.02] lg:scale-105 z-10"
+        : "group relative flex flex-col bg-white dark:bg-zinc-900/50 rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 transition-all duration-500 shadow-sm hover:shadow-md";
 
     return (
         <div className={containerClasses} style={{ animationDelay: `${delay}ms` }}>
             {popular && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-emerald-500/15 px-3 py-1 border border-emerald-400/40 backdrop-blur-md z-20">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 inline-flex items-center gap-1 rounded-full bg-emerald-500/20 px-3 py-1 border border-emerald-400/40 z-20">
                     <Flame size={10} className="text-emerald-600 dark:text-emerald-100" fill="currentColor" />
                     <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-700 dark:text-emerald-100">Most Popular</span>
                 </div>
@@ -185,19 +185,19 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
 
             <div className="flex justify-between items-start mb-6">
                 <div>
-                    <h3 className="text-base font-bold font-geist text-zinc-900 dark:text-slate-50">{title}</h3>
-                    <p className="text-xs text-zinc-500 dark:text-slate-400 mt-1 max-w-[140px] leading-snug">{subtitle}</p>
+                    <h3 className="text-base font-bold font-geist text-zinc-900 dark:text-zinc-100">{title}</h3>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 max-w-[140px] leading-snug">{subtitle}</p>
                 </div>
-                <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-slate-900 flex items-center justify-center shadow-inner text-zinc-900 dark:text-white">
+                <div className="w-10 h-10 rounded-xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shadow-inner text-zinc-900 dark:text-white">
                     {icon}
                 </div>
             </div>
 
             <div className="mb-6">
                 <div className="flex items-baseline gap-1">
-                    {price !== "Custom" && <span className="text-base font-medium text-zinc-500 dark:text-slate-500">$</span>}
-                    <span className="text-3xl font-light tracking-tighter text-zinc-900 dark:text-slate-50 font-geist">{price}</span>
-                    {price !== "Custom" && <span className="text-xs text-zinc-500 dark:text-slate-500">/month</span>}
+                    {price !== "Custom" && <span className="text-base font-medium text-zinc-500 dark:text-zinc-500">$</span>}
+                    <span className="text-3xl font-light tracking-tighter text-zinc-900 dark:text-zinc-100 font-geist">{price}</span>
+                    {price !== "Custom" && <span className="text-xs text-zinc-500 dark:text-zinc-500">/month</span>}
                 </div>
             </div>
 
@@ -207,7 +207,7 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
                         <div className="mt-0.5 min-w-[16px]">
                             <Check size={14} className="text-emerald-500" />
                         </div>
-                        <span className="text-xs text-zinc-600 dark:text-slate-400 leading-snug">{feature}</span>
+                        <span className="text-xs text-zinc-600 dark:text-zinc-400 leading-snug">{feature}</span>
                     </li>
                 ))}
             </ul>
@@ -223,16 +223,16 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
 const FaqItem = ({ question, answer, isOpen, onClick }: any) => (
     <div 
         onClick={onClick}
-        className={`group rounded-2xl p-4 cursor-pointer border border-zinc-200 dark:border-transparent border-gradient before:rounded-2xl transition-all duration-300 ${isOpen ? 'bg-zinc-50 dark:bg-blue-500/5' : 'bg-white dark:bg-gradient-to-br dark:from-blue-500/10 dark:to-blue-500/0 dark:hover:from-blue-500/20'}`}
+        className={`group rounded-2xl p-4 cursor-pointer border border-zinc-200 dark:border-zinc-800 transition-colors duration-200 ${isOpen ? 'bg-zinc-50 dark:bg-zinc-900/50' : 'bg-white dark:bg-zinc-900/30 hover:bg-zinc-50 dark:hover:bg-zinc-900/50'}`}
     >
         <div className="flex justify-between items-center relative z-10">
-            <h4 className={`text-sm font-medium ${isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-700 dark:text-slate-50 group-hover:text-zinc-900 dark:group-hover:text-white'}`}>{question}</h4>
-            <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-blue-500 text-white rotate-180' : 'bg-zinc-200 dark:bg-slate-900 text-zinc-500 dark:text-slate-500'}`}>
+            <h4 className={`text-sm font-medium ${isOpen ? 'text-zinc-900 dark:text-white' : 'text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white'}`}>{question}</h4>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 ${isOpen ? 'bg-zinc-200 dark:bg-zinc-700 text-zinc-900 dark:text-white rotate-180' : 'bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-500'}`}>
                 <ChevronDown size={14} />
             </div>
         </div>
         <div className={`overflow-hidden transition-all duration-300 ease-in-out relative z-10 ${isOpen ? 'max-h-24 opacity-100 mt-2' : 'max-h-0 opacity-0'}`}>
-            <p className="text-xs text-zinc-500 dark:text-slate-400 leading-relaxed pr-8">
+            <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed pr-8">
                 {answer}
             </p>
         </div>

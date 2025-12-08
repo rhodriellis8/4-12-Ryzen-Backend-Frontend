@@ -439,12 +439,12 @@ const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 relative h-screen overflow-y-auto bg-grid scroll-smooth transform-gpu">
+      <main className="flex-1 relative h-screen overflow-y-auto bg-grid scroll-smooth">
         {/* Background Glow */}
         <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-white dark:from-zinc-900/20 to-transparent pointer-events-none will-change-auto"></div>
 
-        <div className="relative z-10 flex flex-col min-h-screen transform-gpu">
-            <Header 
+        <div className="relative z-10 flex flex-col min-h-screen">
+            <Header  
               title={currentView.charAt(0).toUpperCase() + currentView.slice(1)} 
               isDarkMode={isDarkMode}
               toggleTheme={() => setIsDarkMode(!isDarkMode)}

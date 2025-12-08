@@ -131,19 +131,19 @@ const TradesView: React.FC = () => {
       <div className="flex-1 flex flex-col gap-6">
         {/* Stats Row */}
         <div className="flex gap-4">
-            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="flex-1 rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
                 <div>
                     <p className="text-xs text-zinc-500">Entry Price</p>
                     <p className="text-lg font-medium text-zinc-900 dark:text-white">{selectedTrade.entryPrice}</p>
                 </div>
             </div>
-            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="flex-1 rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
                 <div>
                     <p className="text-xs text-zinc-500">Exit Price</p>
                     <p className="text-lg font-medium text-zinc-900 dark:text-white">{selectedTrade.exitPrice}</p>
                 </div>
             </div>
-            <div className="flex-1 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="flex-1 rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 shadow-sm p-6 hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-colors duration-200 group">
                 <div>
                     <p className="text-xs text-zinc-500">Net P&L</p>
                     <p className={`text-lg font-medium ${selectedTrade.pnl >= 0 ? 'text-zinc-900 dark:text-white' : 'text-rose-500'}`}>

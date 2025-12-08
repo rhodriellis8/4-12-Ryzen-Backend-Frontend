@@ -59,7 +59,7 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', childre
         .shiny-cta span::before { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: -1; --size: calc(100% + 1rem); width: var(--size); height: var(--size); box-shadow: inset 0 -1ex 2rem 4px #1d4ed8; opacity: 0; border-radius: inherit; transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1); animation: breathe 4.5s linear infinite; } 
         
         @keyframes shimmer { to { transform: translate(-50%, -50%) rotate(360deg);} } 
-        @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(1);} 50% { transform: translate(-50%, -50%) scale(1.20);} }
+        @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(1);} 50% { transform: translate(-50%, -50%) scale(1.05);} }
       `}} />
 
       <button className="shiny-cta focus:outline-none" {...props}>

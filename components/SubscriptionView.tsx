@@ -11,7 +11,7 @@ const SubscriptionView: React.FC = () => {
 
             <div className="grid md:grid-cols-2 gap-6">
                 <div className="bg-gradient-to-br from-zinc-900 to-zinc-800 dark:from-zinc-800 dark:to-zinc-900 rounded-2xl p-6 text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full -mr-16 -mt-16"></div>
                     
                     <div className="relative z-10">
                         <div className="flex items-center gap-2 mb-4">
@@ -65,6 +65,10 @@ const SubscriptionView: React.FC = () => {
 };
 
 export default SubscriptionView;
+
+
+
+
 
 
 
