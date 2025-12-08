@@ -548,7 +548,7 @@ const LoginView: React.FC<LoginProps> = ({ accentColor = 'white' }) => {
           <div className="h-[180px] relative w-full" ref={vantaRef}>
             <div className="absolute inset-0 bg-gradient-to-t from-white dark:from-zinc-900 to-transparent opacity-90"></div>
             <div className="absolute top-6 left-6 z-10">
-              <span className="flex items-center gap-1.5 px-2.5 py-1 bg-white/80 dark:bg-zinc-800/80 backdrop-blur-sm rounded-full text-[10px] font-bold tracking-wider text-zinc-600 dark:text-zinc-400 mb-3 w-fit border border-zinc-200 dark:border-white/10 uppercase shadow-sm">
+              <span className="flex items-center gap-1.5 px-2.5 py-1 bg-white/80 dark:bg-zinc-800/80 rounded-full text-[10px] font-bold tracking-wider text-zinc-600 dark:text-zinc-400 mb-3 w-fit border border-zinc-200 dark:border-white/10 uppercase shadow-sm">
                 <Shield className="w-3 h-3" />
                 Secure Portal
               </span>
