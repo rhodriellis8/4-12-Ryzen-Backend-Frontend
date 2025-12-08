@@ -130,15 +130,24 @@ const JournalView: React.FC<JournalViewProps> = ({
                 <div 
                     key={entry.id}
                     onClick={() => setSelectedId(entry.id)}
-                    className={`group relative p-4 rounded-xl border cursor-pointer transition-all ${
+                    className={`group relative p-4 pr-10 rounded-xl border cursor-pointer transition-all ${
                         selectedId === entry.id 
                         ? 'bg-white dark:bg-zinc-900 border-zinc-300 dark:border-zinc-700 shadow-sm' 
                         : 'bg-transparent border-transparent hover:bg-zinc-200/50 dark:hover:bg-zinc-900/50'
                     }`}
                 >
                     <div className="flex justify-between items-start mb-1">
-                        <h4 className={`font-medium text-sm truncate pr-6 ${selectedId === entry.id ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-600 dark:text-zinc-400'}`}>{entry.title}</h4>
-                        <span className="text-[10px] text-zinc-400 dark:text-zinc-600 whitespace-nowrap">{entry.date}</span>
+                        <h4 className={`font-medium text-sm truncate flex-1 pr-2 ${selectedId === entry.id ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-600 dark:text-zinc-400'}`}>{entry.title}</h4>
+                        <div className="flex items-center gap-2 shrink-0">
+                            <span className="text-[10px] text-zinc-400 dark:text-zinc-600 whitespace-nowrap">{entry.date}</span>
+                            <button 
+                                onClick={(e) => handleDeleteEntry(e, entry.id)}
+                                className="p-1 text-zinc-400 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded opacity-0 group-hover:opacity-100 transition-all"
+                                title="Delete Entry"
+                            >
+                                <Trash2 size={12} />
+                            </button>
+                        </div>
                     </div>
                     <p className="text-xs text-zinc-500 line-clamp-2">{entry.preview}</p>
                     {entry.images.length > 0 && (
@@ -153,15 +162,6 @@ const JournalView: React.FC<JournalViewProps> = ({
                         )}
                       </div>
                     )}
-                    
-                    {/* Delete Button */}
-                    <button 
-                        onClick={(e) => handleDeleteEntry(e, entry.id)}
-                        className="absolute top-3 right-3 p-1.5 text-zinc-400 hover:text-rose-500 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-md opacity-0 group-hover:opacity-100 transition-all"
-                        title="Delete Entry"
-                    >
-                        <Trash2 size={12} />
-                    </button>
                 </div>
             ))}
             {entries.length === 0 && (

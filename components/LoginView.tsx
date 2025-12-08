@@ -92,9 +92,9 @@ const LoginView: React.FC<LoginProps> = ({ accentColor = 'white' }) => {
             scaleMobile: 1.0,
             color: getColorHex(accentColor),
             backgroundColor: isDark ? 0x09090b : 0xf4f4f5,
-            points: 10.0,
-            maxDistance: 22.0,
-            spacing: 18.0,
+            points: 8.0,        // Reduced for better performance
+            maxDistance: 20.0,  // Slightly reduced
+            spacing: 20.0,      // Increased spacing for fewer lines
             showDots: true,
           })
         );
@@ -538,7 +538,7 @@ const LoginView: React.FC<LoginProps> = ({ accentColor = 'white' }) => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-zinc-50 dark:bg-[#08090A] transition-colors duration-300">
+    <div className="min-h-screen flex items-center justify-center p-4 bg-zinc-50 dark:bg-[#08090A]">
       <div className="max-w-md w-full relative group">
         {/* Card Border Gradient */}
         <div className="absolute -inset-0.5 bg-gradient-to-br from-zinc-300 via-zinc-200 to-zinc-300 dark:from-zinc-700 dark:via-zinc-800 dark:to-zinc-900 rounded-xl opacity-100 blur-[1px] group-hover:blur-[2px] transition duration-200"></div>

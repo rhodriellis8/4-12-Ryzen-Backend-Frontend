@@ -12,7 +12,6 @@ import {
   type DragOverEvent,
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable,
@@ -23,7 +22,6 @@ import {
   Plus,
   X,
   Calendar,
-  Flag,
   Link as LinkIcon,
   Trash2,
   GripVertical,
@@ -37,8 +35,8 @@ import {
   TrendingUp,
   Paperclip,
   MessageSquare,
-  ChevronDown,
 } from 'lucide-react';
+import BasicDropdown from './ui/BasicDropdown';
 import { useTasks, type Task, type TaskColumnId, type TaskPriority, type TaskFrequency } from '../lib/useTasks';
 
 // ==================== TYPES ====================
@@ -69,13 +67,13 @@ const COLUMNS: { id: TaskColumnId; label: string; icon: React.ReactNode }[] = [
 ];
 
 const TASK_TYPES = [
-  { value: 'backtest', label: 'Backtest', color: 'bg-blue-500/20 text-blue-400 border-blue-500/30' },
-  { value: 'review', label: 'Review', color: 'bg-amber-500/20 text-amber-400 border-amber-500/30' },
-  { value: 'strategy', label: 'Strategy', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
-  { value: 'research', label: 'Research', color: 'bg-purple-500/20 text-purple-400 border-purple-500/30' },
-  { value: 'journal', label: 'Journal', color: 'bg-rose-500/20 text-rose-400 border-rose-500/30' },
-  { value: 'setup', label: 'Setup', color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/30' },
-  { value: 'other', label: 'Other', color: 'bg-zinc-500/20 text-zinc-400 border-zinc-500/30' },
+  { value: 'backtest', label: 'Backtest', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'review', label: 'Review', color: 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30' },
+  { value: 'strategy', label: 'Strategy', color: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' },
+  { value: 'research', label: 'Research', color: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30' },
+  { value: 'journal', label: 'Journal', color: 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border-rose-500/30' },
+  { value: 'setup', label: 'Setup', color: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border-cyan-500/30' },
+  { value: 'other', label: 'Other', color: 'bg-zinc-500/20 text-zinc-600 dark:text-zinc-400 border-zinc-500/30' },
 ];
 
 const PRIORITIES: { value: TaskPriority; label: string; color: string }[] = [
@@ -145,7 +143,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
     <div
       ref={setNodeRef}
       style={style}
-      className={`group relative bg-zinc-800/60 border border-zinc-700/50 rounded-lg p-3 cursor-pointer hover:border-emerald-500/30 hover:bg-zinc-800 transition-all ${
+      className={`group relative bg-white dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 rounded-lg p-3 cursor-pointer hover:border-emerald-500/30 hover:shadow-sm transition-all ${
         isDragging ? 'opacity-50 shadow-xl ring-2 ring-emerald-500/50' : ''
       }`}
       onClick={onEdit}
@@ -154,7 +152,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
       <div
         {...attributes}
         {...listeners}
-        className="absolute left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1 text-zinc-500 hover:text-zinc-300"
+        className="absolute left-1 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity cursor-grab active:cursor-grabbing p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300"
         onClick={(e) => e.stopPropagation()}
       >
         <GripVertical size={14} />
@@ -162,11 +160,11 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
 
       <div className="pl-4">
         {/* Title */}
-        <h4 className="text-sm font-medium text-zinc-200 truncate pr-6">{task.title}</h4>
+        <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate pr-6">{task.title}</h4>
         
         {/* Description (Optional) */}
         {task.description && (
-          <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-snug">
+          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2 leading-snug">
             {task.description}
           </p>
         )}
@@ -179,7 +177,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
           {task.priority && (
             <div className={`w-2 h-2 rounded-full ${getPriorityColor(task.priority)}`} title={`Priority: ${task.priority}`} />
           )}
-          {task.is_recurring && <RefreshCw size={12} className="text-purple-400" />}
+          {task.is_recurring && <RefreshCw size={12} className="text-purple-500 dark:text-purple-400" />}
         </div>
 
         {/* Due date + Links + Counters */}
@@ -189,9 +187,9 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
               <span
                 className={`text-[10px] flex items-center gap-1 ${
                   dueDateStatus === 'overdue'
-                    ? 'text-rose-400'
+                    ? 'text-rose-500 dark:text-rose-400'
                     : dueDateStatus === 'soon'
-                    ? 'text-amber-400'
+                    ? 'text-amber-500 dark:text-amber-400'
                     : 'text-zinc-500'
                 }`}
               >
@@ -227,7 +225,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                     e.stopPropagation();
                     onNavigateLink('playbooks', task.linked_playbook_id!);
                   }}
-                  className="p-1 text-emerald-400 hover:bg-emerald-500/20 rounded transition-colors"
+                  className="p-1 text-emerald-500 dark:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
                   title="Go to Playbook"
                 >
                   <BookOpen size={12} />
@@ -239,7 +237,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                     e.stopPropagation();
                     onNavigateLink('journal', task.linked_journal_id!);
                   }}
-                  className="p-1 text-rose-400 hover:bg-rose-500/20 rounded transition-colors"
+                  className="p-1 text-rose-500 dark:text-rose-400 hover:bg-rose-500/10 rounded transition-colors"
                   title="Go to Journal"
                 >
                   <FileText size={12} />
@@ -251,7 +249,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                     e.stopPropagation();
                     onNavigateLink('trades', task.linked_trade_id!);
                   }}
-                  className="p-1 text-blue-400 hover:bg-blue-500/20 rounded transition-colors"
+                  className="p-1 text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 rounded transition-colors"
                   title="Go to Trade"
                 >
                   <TrendingUp size={12} />
@@ -263,7 +261,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                     e.stopPropagation();
                     onNavigateLink('notebooks', task.linked_notebook_id!);
                   }}
-                  className="p-1 text-purple-400 hover:bg-purple-500/20 rounded transition-colors"
+                  className="p-1 text-purple-500 dark:text-purple-400 hover:bg-purple-500/10 rounded transition-colors"
                   title="Go to Notebook"
                 >
                   <BookOpen size={12} />
@@ -280,7 +278,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
           e.stopPropagation();
           onDelete();
         }}
-        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-zinc-500 hover:text-rose-400 hover:bg-rose-500/20 rounded transition-all"
+        className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 p-1 text-zinc-400 hover:text-rose-500 hover:bg-rose-500/10 rounded transition-all"
       >
         <Trash2 size={12} />
       </button>
@@ -291,10 +289,10 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
 // ==================== TASK CARD (for overlay) ====================
 
 const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => (
-  <div className="bg-zinc-800/90 backdrop-blur-sm border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
-    <h4 className="text-sm font-medium text-zinc-200 truncate">{task.title}</h4>
+  <div className="bg-white dark:bg-zinc-800/90 backdrop-blur-sm border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
+    <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">{task.title}</h4>
     {task.description && (
-      <p className="text-xs text-zinc-400 mt-1 line-clamp-2 leading-snug">
+      <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2 leading-snug">
         {task.description}
       </p>
     )}
@@ -327,19 +325,19 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   onNavigateLink,
 }) => {
   return (
-    <div className="flex flex-col w-72 min-w-[288px] bg-zinc-900/50 border border-zinc-800 rounded-xl overflow-hidden">
+    <div className="flex flex-col w-72 min-w-[288px] bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
       {/* Column Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-gradient-to-r from-zinc-800/80 to-zinc-900/80 border-b border-zinc-800">
+      <div className="flex items-center justify-between px-4 py-3 bg-zinc-100 dark:bg-gradient-to-r dark:from-zinc-800/80 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center gap-2">
-          <span className="text-zinc-400">{column.icon}</span>
-          <h3 className="text-sm font-semibold text-zinc-200">{column.label}</h3>
-          <span className="text-[10px] px-1.5 py-0.5 bg-zinc-700/50 rounded-full text-zinc-400">
+          <span className="text-zinc-500 dark:text-zinc-400">{column.icon}</span>
+          <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{column.label}</h3>
+          <span className="text-[10px] px-1.5 py-0.5 bg-white dark:bg-zinc-700/50 rounded-full text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-transparent">
             {tasks.length}
           </span>
         </div>
         <button
           onClick={onAddTask}
-          className="p-1 text-zinc-500 hover:text-emerald-400 hover:bg-emerald-500/20 rounded transition-colors"
+          className="p-1 text-zinc-400 hover:text-emerald-500 dark:text-zinc-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
         >
           <Plus size={16} />
         </button>
@@ -359,7 +357,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
           ))}
         </SortableContext>
         {tasks.length === 0 && (
-          <div className="flex items-center justify-center h-24 text-zinc-600 text-xs">
+          <div className="flex items-center justify-center h-24 text-zinc-400 dark:text-zinc-600 text-xs">
             No tasks yet
           </div>
         )}
@@ -449,41 +447,23 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
           <div className="grid grid-cols-2 gap-5">
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Type</label>
-              <div className="relative">
-                <select
-                  value={taskType}
-                  onChange={(e) => setTaskType(e.target.value)}
-                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
-                >
-                  {TASK_TYPES.map((t) => (
-                    <option key={t.value} value={t.value}>
-                      {t.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
-                </div>
-              </div>
+              <BasicDropdown
+                label="Select Type"
+                items={TASK_TYPES.map(t => ({ id: t.value, label: t.label }))}
+                selectedValue={taskType}
+                onChange={(item) => setTaskType(item.id as string)}
+                className="w-full"
+              />
             </div>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Priority</label>
-              <div className="relative">
-                <select
-                  value={priority}
-                  onChange={(e) => setPriority(e.target.value as TaskPriority)}
-                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
-                >
-                  {PRIORITIES.map((p) => (
-                    <option key={p.value} value={p.value}>
-                      {p.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
-                </div>
-              </div>
+              <BasicDropdown
+                label="Select Priority"
+                items={PRIORITIES.map(p => ({ id: p.value, label: p.label }))}
+                selectedValue={priority}
+                onChange={(item) => setPriority(item.id as TaskPriority)}
+                className="w-full"
+              />
             </div>
           </div>
 
@@ -500,22 +480,13 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
             </div>
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-wider">Column</label>
-              <div className="relative">
-                <select
-                  value={columnId}
-                  onChange={(e) => setColumnId(e.target.value as TaskColumnId)}
-                  className="w-full appearance-none px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all cursor-pointer"
-                >
-                  {COLUMNS.map((c) => (
-                    <option key={c.id} value={c.id}>
-                      {c.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
-                </div>
-              </div>
+              <BasicDropdown
+                label="Select Column"
+                items={COLUMNS.map(c => ({ id: c.id, label: c.label }))}
+                selectedValue={columnId}
+                onChange={(item) => setColumnId(item.id as TaskColumnId)}
+                className="w-full"
+              />
             </div>
           </div>
 
@@ -547,19 +518,17 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
               <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors">Recurring task</span>
             </label>
             {isRecurring && (
-              <div className="relative animate-in fade-in slide-in-from-left-2 duration-200">
-                <select
-                  value={recurringFrequency ?? ''}
-                  onChange={(e) => setRecurringFrequency((e.target.value || null) as TaskFrequency)}
-                  className="appearance-none pl-3 pr-8 py-1.5 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
-                >
-                  <option value="">Select frequency...</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
-                <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-500">
-                  <svg width="8" height="4" viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M1 1L5 5L9 1" /></svg>
-                </div>
+              <div className="animate-in fade-in slide-in-from-left-2 duration-200 w-40">
+                <BasicDropdown
+                  label="Select frequency..."
+                  items={[
+                    { id: 'weekly', label: 'Weekly' },
+                    { id: 'monthly', label: 'Monthly' }
+                  ]}
+                  selectedValue={recurringFrequency || ''}
+                  onChange={(item) => setRecurringFrequency(item.id as TaskFrequency)}
+                  className="w-full"
+                />
               </div>
             )}
           </div>
@@ -613,28 +582,28 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full max-w-md bg-zinc-900 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-emerald-900/30 to-zinc-900/80 border-b border-zinc-800">
+      <div className="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-900/30 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2">
-            <CheckCircle2 size={20} className="text-emerald-400" />
-            <h2 className="text-lg font-semibold text-zinc-100">Complete Task</h2>
+            <CheckCircle2 size={20} className="text-emerald-500 dark:text-emerald-400" />
+            <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Complete Task</h2>
           </div>
-          <button onClick={onClose} className="p-1 text-zinc-500 hover:text-zinc-300 transition-colors">
+          <button onClick={onClose} className="p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors">
             <X size={20} />
           </button>
         </div>
         <div className="p-6 space-y-4">
-          <p className="text-sm text-zinc-300">
-            Completing: <span className="font-medium text-zinc-100">{data.taskTitle}</span>
+          <p className="text-sm text-zinc-600 dark:text-zinc-300">
+            Completing: <span className="font-medium text-zinc-900 dark:text-zinc-100">{data.taskTitle}</span>
           </p>
           <div>
-            <label className="block text-xs font-medium text-zinc-400 mb-1">
+            <label className="block text-xs font-medium text-zinc-500 dark:text-zinc-400 mb-1">
               Result Notes (optional)
             </label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none"
+              className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none"
               placeholder="What was the outcome? Any learnings?"
               rows={3}
             />
@@ -642,7 +611,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
           <div className="flex items-center justify-end gap-2 pt-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm text-zinc-400 hover:text-zinc-200 transition-colors"
+              className="px-4 py-2 text-sm text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors"
             >
               Cancel
             </button>
@@ -871,47 +840,31 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
       {/* Header + Filters */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-zinc-100">Tasks</h1>
+          <h1 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Tasks</h1>
           <p className="text-sm text-zinc-500 mt-1">Manage your trading workflow</p>
         </div>
         <div className="flex items-center gap-3">
           {/* Type Filter */}
-          <div className="relative group">
-            <select
-              value={typeFilter}
-              onChange={(e) => setTypeFilter(e.target.value)}
-              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-all cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"
-            >
-              <option value="">All Types</option>
-              {TASK_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200 transition-colors">
-              <ChevronDown size={14} />
-            </div>
-          </div>
+          <BasicDropdown
+            label="All Types"
+            items={[
+              { id: '', label: 'All Types' },
+              ...TASK_TYPES.map(t => ({ id: t.value, label: t.label }))
+            ]}
+            onChange={(item) => setTypeFilter(item.id as string)}
+            className="w-40"
+          />
 
           {/* Priority Filter */}
-          <div className="relative group">
-            <select
-              value={priorityFilter}
-              onChange={(e) => setPriorityFilter(e.target.value as TaskPriority | '')}
-              className="appearance-none pl-4 pr-10 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-700 dark:text-zinc-300 text-xs font-medium focus:outline-none focus:ring-2 focus:ring-zinc-500/20 transition-all cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-700 shadow-sm"
-            >
-              <option value="">All Priorities</option>
-              {PRIORITIES.map((p) => (
-                <option key={p.value} value={p.value}>
-                  {p.label}
-                </option>
-              ))}
-            </select>
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-zinc-400 group-hover:text-zinc-600 dark:group-hover:text-zinc-200 transition-colors">
-              <ChevronDown size={14} />
-            </div>
-          </div>
+          <BasicDropdown
+            label="All Priorities"
+            items={[
+              { id: '', label: 'All Priorities' },
+              ...PRIORITIES.map(p => ({ id: p.value, label: p.label }))
+            ]}
+            onChange={(item) => setPriorityFilter(item.id as TaskPriority | '')}
+            className="w-40"
+          />
 
           {/* New Task Button */}
           <button
@@ -976,4 +929,3 @@ const TasksView: React.FC<TasksViewProps> = ({ userId, onNavigate }) => {
 };
 
 export default TasksView;
-

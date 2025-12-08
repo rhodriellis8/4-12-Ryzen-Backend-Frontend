@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
 import { X, Search, ChevronLeft, Wallet, Upload, Plus, Server, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react';
+import BasicDropdown from './ui/BasicDropdown';
 
 interface AccountManagerModalProps {
   isOpen: boolean;
@@ -30,6 +31,14 @@ const AccountManagerModal: React.FC<AccountManagerModalProps> = ({
   const [server, setServer] = useState('');
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+  const [startDate, setStartDate] = useState('all');
+
+  const START_DATE_OPTIONS = [
+    { id: 'all', label: 'Import all records' },
+    { id: '30d', label: 'Last 30 days' },
+    { id: '90d', label: 'Last 90 days' },
+    { id: 'ytd', label: 'Year to Date' },
+  ];
 
   if (!isOpen) return null;
 
@@ -225,12 +234,13 @@ const AccountManagerModal: React.FC<AccountManagerModalProps> = ({
           <div className="space-y-4">
              <div>
                 <label className="block text-xs font-medium text-zinc-500 mb-1.5">Start date</label>
-                <select className="w-full px-4 py-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm focus:outline-none">
-                    <option>Import all records</option>
-                    <option>Last 30 days</option>
-                    <option>Last 90 days</option>
-                    <option>Year to Date</option>
-                </select>
+                <BasicDropdown 
+                  label="Select Date Range"
+                  items={START_DATE_OPTIONS}
+                  selectedValue={startDate}
+                  onChange={(item) => setStartDate(item.id as string)}
+                  className="w-full"
+                />
              </div>
              
              <div>

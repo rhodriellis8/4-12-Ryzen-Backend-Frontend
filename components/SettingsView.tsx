@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Moon, Sun, User, Bell } from 'lucide-react';
+import ButtonCopy from './ui/ButtonCopy';
 
 interface SettingsViewProps {
   isDarkMode: boolean;
@@ -105,6 +106,20 @@ const SettingsView: React.FC<SettingsViewProps> = ({ isDarkMode, setIsDarkMode, 
                         className="w-full px-3 py-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-md text-sm text-zinc-500 cursor-not-allowed" 
                     />
                 </div>
+                {user?.id && (
+                  <div className="col-span-2">
+                    <label className="block text-xs font-medium text-zinc-500 mb-1.5">User ID</label>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="text" 
+                        value={user.id}
+                        disabled
+                        className="flex-1 px-3 py-2 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-md text-sm text-zinc-500 cursor-not-allowed font-mono" 
+                      />
+                      <ButtonCopy onCopy={() => navigator.clipboard.writeText(user.id)} />
+                    </div>
+                  </div>
+                )}
             </div>
             <div className="flex justify-end mt-4">
                 <button 

@@ -320,7 +320,7 @@ const NotebookView: React.FC<NotebookViewProps> = ({
     <div className="relative">
       <div className="flex justify-between items-center mb-8">
         <div>
-          <h2 className="text-2xl font-geist font-light text-zinc-900 dark:text-white mb-1">Notebooks</h2>
+          <h2 className="text-2xl font-bold font-geist text-zinc-900 dark:text-white mb-1">Notebooks</h2>
           <p className="text-sm text-zinc-500">{notebooks.length ? 'Organize your research, reviews, and forecasts.' : 'Create your first notebook to get started.'}</p>
         </div>
         <button

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Check, Star, Flame, ChevronDown } from 'lucide-react';
 import { getStripe } from '../lib/stripeClient';
+import ShinyButton from './ui/ShinyButton';
 
 const BASIC_PRICE_ID = 'price_1SZuU38BPSPtN7MgnPFF3AVy';
 const PRO_PRICE_ID = 'price_1SZuUH8BPSPtN7MgJX9aRaag';
@@ -58,7 +59,7 @@ const PricingView: React.FC = () => {
   return (
     <div>
       {/* Container */}
-      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-white/40 dark:bg-gradient-to-br dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 border-gradient before:rounded-[28px] shadow-sm dark:shadow-[0_40px_120px_rgba(0,0,0,0.95)]">
+      <div className="max-w-6xl mx-auto px-6 py-12 lg:py-16 rounded-[28px] relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-blue-500/5 dark:via-transparent dark:to-blue-500/5 border border-zinc-200 dark:border-transparent border-gradient before:rounded-[28px] shadow-sm dark:shadow-[0_40px_120px_rgba(0,0,0,0.95)]">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6 relative z-10">
@@ -151,24 +152,6 @@ const PricingView: React.FC = () => {
   );
 };
 
-const GlowingButton = ({ text, onClick, disabled }: { text: string; onClick?: () => void; disabled?: boolean }) => {
-    return (
-        <div className="btn-wrapper">
-            <button 
-              className="btn px-4 py-3 disabled:opacity-60 disabled:cursor-not-allowed" 
-              type="button"
-              onClick={disabled ? undefined : onClick}
-              disabled={disabled}
-            >
-                <svg className="btn-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904 9 18.75l-.813-2.846a4.5 4.5 0 0 0-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 0 0 3.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 0 0 3.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 0 0-3.09 3.09ZM18.259 8.715 18 9.75l-.259-1.035a3.375 3.375 0 0 0-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 0 0 2.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 0 0 2.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 0 0-2.456 2.456ZM16.894 20.567 16.5 21.75l-.394-1.183a2.25 2.25 0 0 0-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 0 0 1.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 0 0 1.423 1.423l1.183.394-1.183.394a2.25 2.25 0 0 0-1.423 1.423Z"></path>
-                </svg>
-                <span>{text}</span>
-            </button>
-        </div>
-    );
-};
-
 interface PricingCardProps {
   title: string;
   price: string;
@@ -231,7 +214,7 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
 
             {/* Replaced standard button with GlowingButton */}
             <div className="mt-auto">
-                <GlowingButton text={buttonText} onClick={onClick} disabled={loading} />
+                <ShinyButton text={buttonText} onClick={onClick} disabled={loading} className="w-full" />
             </div>
         </div>
     );
@@ -240,7 +223,7 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
 const FaqItem = ({ question, answer, isOpen, onClick }: any) => (
     <div 
         onClick={onClick}
-        className={`group rounded-2xl p-4 cursor-pointer border-gradient before:rounded-2xl transition-all duration-300 ${isOpen ? 'bg-blue-500/5' : 'bg-gradient-to-br from-blue-500/10 to-blue-500/0 hover:from-blue-500/20'}`}
+        className={`group rounded-2xl p-4 cursor-pointer border border-zinc-200 dark:border-transparent border-gradient before:rounded-2xl transition-all duration-300 ${isOpen ? 'bg-zinc-50 dark:bg-blue-500/5' : 'bg-white dark:bg-gradient-to-br dark:from-blue-500/10 dark:to-blue-500/0 dark:hover:from-blue-500/20'}`}
     >
         <div className="flex justify-between items-center relative z-10">
             <h4 className={`text-sm font-medium ${isOpen ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-700 dark:text-slate-50 group-hover:text-zinc-900 dark:group-hover:text-white'}`}>{question}</h4>

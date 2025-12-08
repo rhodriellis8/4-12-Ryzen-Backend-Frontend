@@ -1,6 +1,23 @@
-import React from 'react';
-import { ArrowUpRight, TrendingUp, Activity, BarChart3, Zap, Clock } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUpRight, TrendingUp, Activity, BarChart3, Zap, Clock, Layout, Check, GripHorizontal } from 'lucide-react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis } from 'recharts';
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  rectSortingStrategy,
+  useSortable
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 const chartData = [
   { name: 'Mon', value: 400 },
@@ -12,50 +29,131 @@ const chartData = [
   { name: 'Sun', value: 800 },
 ];
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  userName?: string | null;
+}
+
+interface StatItem {
+  id: string;
+  label: string;
+  value: string;
+  change: string;
+  isPositive: boolean;
+  icon: React.ReactNode;
+}
+
+const defaultStats: StatItem[] = [
+  { id: 'pnl', label: "Net P&L (Monthly)", value: "+$12,450", change: "+12.5%", isPositive: true, icon: <TrendingUp size={16} /> },
+  { id: 'winrate', label: "Win Rate", value: "68.4%", change: "+2.1%", isPositive: true, icon: <Activity size={16} /> },
+  { id: 'pf', label: "Profit Factor", value: "2.41", change: "-0.05", isPositive: false, icon: <BarChart3 size={16} /> },
+  { id: 'rr', label: "Avg. R:R", value: "1 : 2.8", change: "+0.2", isPositive: true, icon: <Zap size={16} /> },
+];
+
+const SortableStat = ({ stat, isEditing }: { stat: StatItem; isEditing: boolean }) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = useSortable({ id: stat.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : 'auto',
+  };
+
+  return (
+    <div ref={setNodeRef} style={style} className={`relative h-full ${isDragging ? 'opacity-50 shadow-lg z-50' : ''}`}>
+      <StatWidget 
+        label={stat.label} 
+        value={stat.value} 
+        change={stat.change} 
+        isPositive={stat.isPositive} 
+        icon={stat.icon}
+      />
+      {isEditing && (
+        <div 
+            {...attributes} 
+            {...listeners} 
+            className="absolute top-3 right-3 p-1.5 bg-zinc-100 dark:bg-zinc-800 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 rounded-md cursor-grab active:cursor-grabbing transition-colors z-10"
+        >
+            <GripHorizontal size={14} />
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Hero: React.FC<HeroProps> = ({ userName }) => {
+  const [stats, setStats] = useState(defaultStats);
+  const [isCustomizing, setIsCustomizing] = useState(false);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (active.id !== over?.id) {
+      setStats((items) => {
+        const oldIndex = items.findIndex((item) => item.id === active.id);
+        const newIndex = items.findIndex((item) => item.id === over?.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
+
   return (
     <div className="mt-4">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white font-geist mb-2">
-            Welcome back, <span className="text-emerald-500">John</span>
-        </h1>
-        <p className="text-zinc-500 dark:text-zinc-400">Here's what's happening in your trading workspace today.</p>
+      <div className="flex items-end justify-between mb-8">
+        <div>
+            <h1 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white font-geist mb-2">
+                Welcome back, <span className="text-zinc-900 dark:text-white">{userName || 'Trader'}</span>
+            </h1>
+            <p className="text-zinc-500 dark:text-zinc-400">Here's what's happening in your trading workspace today.</p>
+        </div>
+        
+        {/* Customization Toggle */}
+        <button 
+            onClick={() => setIsCustomizing(!isCustomizing)}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                isCustomizing 
+                ? 'bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm' 
+                : 'bg-white dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+            }`}
+        >
+            {isCustomizing ? <Check size={14} /> : <Layout size={14} />}
+            {isCustomizing ? 'Done' : 'Customize'}
+        </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <StatWidget 
-            label="Net P&L (Monthly)" 
-            value="+$12,450" 
-            change="+12.5%" 
-            isPositive={true} 
-            icon={<TrendingUp size={16} />}
-        />
-        <StatWidget 
-            label="Win Rate" 
-            value="68.4%" 
-            change="+2.1%" 
-            isPositive={true} 
-            icon={<Activity size={16} />}
-        />
-        <StatWidget 
-            label="Profit Factor" 
-            value="2.41" 
-            change="-0.05" 
-            isPositive={false} 
-            icon={<BarChart3 size={16} />}
-        />
-        <StatWidget 
-            label="Avg. R:R" 
-            value="1 : 2.8" 
-            change="+0.2" 
-            isPositive={true} 
-            icon={<Zap size={16} />}
-        />
-      </div>
+      <DndContext 
+        sensors={sensors} 
+        collisionDetection={closestCenter} 
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext 
+            items={stats.map(s => s.id)} 
+            strategy={rectSortingStrategy}
+        >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                {stats.map((stat) => (
+                    <SortableStat key={stat.id} stat={stat} isEditing={isCustomizing} />
+                ))}
+            </div>
+        </SortableContext>
+      </DndContext>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Chart Widget */}
-        <div className="lg:col-span-2 border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 relative overflow-hidden group hover:bg-white dark:hover:bg-zinc-900 transition-all">
+        <div className="lg:col-span-2 border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 relative overflow-hidden group hover:bg-white dark:hover:bg-zinc-900 transition-all">
             <div className="flex justify-between items-center mb-6 relative z-10">
                 <div>
                     <h3 className="text-lg font-bold text-zinc-900 dark:text-white font-geist">Equity Curve</h3>
@@ -83,14 +181,12 @@ const Hero: React.FC = () => {
                     </AreaChart>
                 </ResponsiveContainer>
             </div>
-            
-            {/* Background noise/grain could go here */}
         </div>
 
         {/* Side Widgets Column */}
         <div className="space-y-6">
             {/* Active Playbook Widget */}
-            <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                 <div className="flex items-center gap-2 mb-4">
                     <Zap size={16} className="text-amber-500" />
                     <h3 className="font-bold text-zinc-900 dark:text-white">Focus Playbook</h3>
@@ -110,7 +206,7 @@ const Hero: React.FC = () => {
             </div>
 
             {/* Recent Activity Widget */}
-            <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+            <div className="border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent shadow-sm p-6 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
                  <div className="flex items-center gap-2 mb-4">
                     <Clock size={16} className="text-zinc-400" />
                     <h3 className="font-bold text-zinc-900 dark:text-white">Recent Log</h3>
@@ -139,7 +235,7 @@ const Hero: React.FC = () => {
 };
 
 const StatWidget: React.FC<{label: string; value: string; change: string; isPositive: boolean; icon: React.ReactNode}> = ({ label, value, change, isPositive, icon }) => (
-    <div className="border-gradient before:rounded-xl rounded-xl bg-white/50 dark:bg-zinc-900/50 border border-transparent p-5 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
+    <div className="h-full border-gradient before:rounded-xl rounded-xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-transparent p-5 hover:bg-white dark:hover:bg-zinc-900 transition-all group">
         <div className="flex justify-between items-start mb-4">
             <div className="p-2 rounded-lg bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">
                 {icon}

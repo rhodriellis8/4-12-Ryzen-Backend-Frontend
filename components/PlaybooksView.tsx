@@ -213,7 +213,7 @@ const PlaybooksView: React.FC<PlaybooksViewProps> = ({
     <div className="relative pb-20">
       <div className="flex justify-between items-center mb-8">
         <div>
-            <h2 className="text-2xl font-geist font-light text-zinc-900 dark:text-white mb-1">Trading Playbooks</h2>
+            <h2 className="text-2xl font-bold font-geist text-zinc-900 dark:text-white mb-1">Trading Playbooks</h2>
             <p className="text-sm text-zinc-500">Codify your edge with strict rule-based checklists.</p>
         </div>
         <button 

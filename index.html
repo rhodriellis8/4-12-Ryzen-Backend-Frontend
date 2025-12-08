@@ -34,54 +34,78 @@
         --font-geist: 'Inter', system-ui, sans-serif;
         --font-manrope: 'Manrope', sans-serif;
         --font-mono: 'JetBrains Mono', monospace;
-        --color-accent: #18181b; /* Default to Dark Cursor for Light Mode */
+        --color-accent: #18181b;
         --bg-dark: #0a0a0a;
         
         /* Light Mode Button Colors */
         --btn-bg: #ffffff;
-        --btn-text: #18181b; /* Zinc 900 */
+        --btn-text: #000000;
 
         /* Light Mode Shiny CTA specific */
-        --shiny-border: #d4d4d8; /* Zinc 300 */
-        --shiny-main: #3b82f6;   /* Blue 500 */
-        --shiny-shine: #93c5fd;  /* Blue 300 */
+        --shiny-border: #000000;
+        --shiny-main: #000000;
+        --shiny-shine: #a1a1aa;
       }
-      .dark {
-        --color-accent: #ffffff; /* White Cursor for Dark Mode */
-        
-        /* Dark Mode Button Colors */
-        --btn-bg: #101010;
-        --btn-text: #ffffff;
-
-        /* Dark Mode Shiny CTA specific */
-        --shiny-border: #1a1818; /* Dark Black/Grey */
-        --shiny-main: #1d4ed8;   /* Blue */
-        --shiny-shine: #8484ff;  /* Purple/Blue Shine */
+      
+      /* Hardware acceleration for smoother animations */
+      html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
       }
-      @property --gradient-angle { syntax: "<angle>"; initial-value: 0deg; inherits: false; } 
-      @property --gradient-angle-offset { syntax: "<angle>"; initial-value: 0deg; inherits: false; } 
-      @property --gradient-percent { syntax: "<percentage>"; initial-value: 20%; inherits: false; } 
-      @property --gradient-shine { syntax: "<color>"; initial-value: #8484ff; inherits: false; } 
-      .shiny-cta { --gradient-angle: 0deg; --gradient-angle-offset: 0deg; --gradient-percent: 20%; --gradient-shine: var(--shiny-shine); --shadow-size: 2px; position: relative; overflow: hidden; border-radius: 9999px; padding: 0.5rem 1.25rem; font-size: 0.875rem; line-height: 1.2; font-weight: 500; color: var(--btn-text); background: linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box, conic-gradient( from calc(var(--gradient-angle) - var(--gradient-angle-offset)), transparent 0%, var(--shiny-main) 5%, var(--gradient-shine) 15%, var(--shiny-main) 30%, transparent 40%, transparent 100% ) border-box; border: 2px solid transparent; box-shadow: inset 0 0 0 1px var(--shiny-border); outline: none; transition: --gradient-angle-offset 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-percent 800ms cubic-bezier(0.25, 1, 0.5, 1), --gradient-shine 800ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s; cursor: pointer; isolation: isolate; outline-offset: 4px; font-family: 'Inter', 'Helvetica Neue', sans-serif; z-index: 0; animation: border-spin 2.5s linear infinite; } 
-      @keyframes border-spin { to { --gradient-angle: 360deg; } } 
-      .shiny-cta:active { transform: translateY(1px); } 
-      .shiny-cta::before { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 0; --size: calc(100% - 6px); --position: 2px; --space: 4px; width: var(--size); height: var(--size); background: radial-gradient(circle at var(--position) var(--position), white 0.5px, transparent 0) padding-box; background-size: var(--space) var(--space); background-repeat: space; mask-image: conic-gradient( from calc(var(--gradient-angle) + 45deg), black, transparent 10% 90%, black ); border-radius: inherit; opacity: 0.4; pointer-events: none; } 
-      .shiny-cta::after { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: 1; width: 100%; aspect-ratio: 1; background: linear-gradient(-50deg, transparent, var(--shiny-main), transparent); mask-image: radial-gradient(circle at bottom, transparent 40%, black); opacity: 0.6; animation: shimmer 4s linear infinite; animation-play-state: running; } 
-      .shiny-cta span { position: relative; z-index: 2; display: inline-block; } 
-      .shiny-cta span::before { content: ''; pointer-events: none; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); z-index: -1; --size: calc(100% + 1rem); width: var(--size); height: var(--size); box-shadow: inset 0 -1ex 2rem 4px var(--shiny-main); opacity: 0; border-radius: inherit; transition: opacity 800ms cubic-bezier(0.25, 1, 0.5, 1); animation: breathe 4.5s linear infinite; } 
-      @keyframes shimmer { to { transform: translate(-50%, -50%) rotate(360deg);} } 
-      @keyframes breathe { 0%, 100% { transform: translate(-50%, -50%) scale(1);} 50% { transform: translate(-50%, -50%) scale(1.20);} }
+      
+      .transform-gpu {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+      }
       
       body {
         font-family: var(--font-manrope);
-        background-color: #ffffff; /* Pure White */
-        color: #18181b; /* Zinc 900 */
+        background-color: #ffffff;
+        color: #000000;
         cursor: none;
       }
-      .dark body {
-        background-color: #000000; /* Black */
-        color: #e4e4e7; /* Zinc 200 */
+      
+      /* Light mode specific overrides for strict black/white */
+      html:not(.dark) .bg-zinc-50,
+      html:not(.dark) .bg-zinc-100,
+      html:not(.dark) .bg-zinc-200,
+      html:not(.dark) .bg-white\/50,
+      html:not(.dark) .bg-white\/40 {
+        background-color: #ffffff;
+        border-color: #000000;
       }
+
+      html:not(.dark) .text-zinc-500,
+      html:not(.dark) .text-zinc-600,
+      html:not(.dark) .text-zinc-700,
+      html:not(.dark) .text-zinc-800,
+      html:not(.dark) .text-zinc-900 {
+        color: #000000;
+      }
+      
+      html:not(.dark) .text-zinc-400 {
+        color: #52525b;
+      }
+
+      /* Make borders clearer in light mode */
+      html:not(.dark) .border-zinc-100,
+      html:not(.dark) .border-zinc-200,
+      html:not(.dark) .border-zinc-300,
+      html:not(.dark) .border-zinc-700,
+      html:not(.dark) .border-zinc-800 {
+        border-color: #d4d4d8;
+      }
+
+      html:not(.dark) .border-transparent {
+        border-color: transparent;
+      }
+
+      .dark body {
+        background-color: #000000;
+        color: #e4e4e7;
+      }
+      
       h1, h2, h3, h4, h5, h6 {
         font-family: var(--font-geist);
       }
@@ -95,7 +119,6 @@
         background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(12px);
         border: 1px solid rgba(0, 0, 0, 0.08);
-        transition: background-color 0.3s, border-color 0.3s;
       }
       .dark .glass-panel {
         background: rgba(24, 24, 27, 0.6);
@@ -111,6 +134,7 @@
         background-image: linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
       }
+      
       /* Custom scrollbar for webkit */
       ::-webkit-scrollbar {
         width: 8px;
@@ -141,7 +165,7 @@
         content: "";
         position: absolute;
         inset: 0;
-        border-radius: inherit; /* inherit from parent */
+        border-radius: inherit;
         padding: 1px;
         -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
@@ -169,20 +193,18 @@
         height: 8px;
         background-color: var(--color-accent);
         box-shadow: 0 0 15px 2px rgba(255, 255, 255, 0.8);
-        transition: width 0.1s, height 0.1s;
       }
       .cursor-ring {
         width: 32px;
         height: 32px;
         border: 1.5px solid rgba(255, 255, 255, 0.4);
         background-color: rgba(255, 255, 255, 0.05);
-        transition: all 0.1s ease-out;
+        transition: width 0.15s ease-out, height 0.15s ease-out, border-color 0.15s ease-out;
       }
       .dark .cursor-ring {
         border-color: rgba(255, 255, 255, 0.4);
         background-color: rgba(255, 255, 255, 0.05);
       }
-      /* In light mode, make ring visible */
       :not(.dark) .cursor-ring {
         border-color: rgba(0, 0, 0, 0.3);
         background-color: rgba(0, 0, 0, 0.02);
@@ -198,7 +220,7 @@
         background-color: rgba(0, 0, 0, 0.05);
       }
 
-      /* ---------- Glowing Button Styles ---------- */
+      /* Glowing Button Styles */
       .btn-wrapper {
         position: relative;
         display: inline-block;
@@ -217,13 +239,10 @@
         align-items: center;
         width: 100%;
 
-        /* Gradient Border Logic */
         border: 1px solid transparent;
-        /* Dynamic background color based on theme variable */
         background: linear-gradient(var(--btn-bg), var(--btn-bg)) padding-box,
                     linear-gradient(135deg, #3b82f6, #10b981) border-box;
 
-        /* Complex layered shadows */
         box-shadow:
           inset 0px 1px 1px rgba(255, 255, 255, 0.2),
           inset 0px 2px 2px rgba(255, 255, 255, 0.15),
@@ -256,7 +275,7 @@
         font-family: var(--font-geist);
         font-weight: 600;
         text-transform: uppercase;
-        font-size: 0.75rem; /* text-xs */
+        font-size: 0.75rem;
         letter-spacing: 0.05em;
         color: var(--btn-text);
       }
@@ -268,18 +287,18 @@
         filter: drop-shadow(0 0 2px #ffffff99);
       }
     </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
-  }
-}
-</script>
-</head>
+    <script type="importmap">
+    {
+      "imports": {
+        "react/": "https://aistudiocdn.com/react@^19.2.0/",
+        "react": "https://aistudiocdn.com/react@^19.2.0",
+        "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+        "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+        "recharts": "https://aistudiocdn.com/recharts@^3.5.0"
+      }
+    }
+    </script>
+  </head>
   <body>
     <div id="root"></div>
 
@@ -298,7 +317,6 @@
         cursorRing.style.left = `${x}px`;
         cursorRing.style.top = `${y}px`;
         const target = e.target;
-        // Check for common interactable elements, including those nested within buttons/links
         if (target.closest('.interactable') || target.closest('a') || target.closest('button')) {
           document.body.classList.add('hovering');
         } else {

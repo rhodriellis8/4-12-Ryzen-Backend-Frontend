@@ -42,7 +42,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
 
   return (
     <aside 
-      className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-white/80 dark:bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50"
+      className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-white dark:bg-zinc-950 sticky top-0 z-50"
       style={{ 
         "--main-color": "#ffffff", 
         "--main-color-opacity": "rgba(255, 255, 255, 0.1)", 
@@ -70,12 +70,13 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
 
           {/* Glider */}
           <div 
-            className="absolute left-2 w-full pointer-events-none transition-all duration-500 cubic-bezier(0.37, 1.95, 0.66, 0.56)"
+            className="absolute left-2 w-full pointer-events-none will-change-transform"
             style={{
               height: `${100 / NAV_ITEMS.length}%`,
               top: 0,
-              transform: `translateY(${activeIndex * 100}%)`,
+              transform: `translateY(${activeIndex * 100}%) translateZ(0)`,
               opacity: showGlider ? 1 : 0,
+              transition: 'transform 0.4s ease-out, opacity 0.2s ease-out',
             }}
           >
             <div className="relative w-full h-full">
@@ -92,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, us
               key={item.id}
               onClick={() => onNavigate(item.value)}
               className={`
-                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-all duration-300
+                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors duration-200
                 ${currentView === item.value 
                   ? 'text-zinc-900 dark:text-white bg-zinc-100/50 dark:bg-white/5' 
                   : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-white/5'
