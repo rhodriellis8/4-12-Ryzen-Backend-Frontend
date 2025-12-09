@@ -17,6 +17,7 @@ import {
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
 import { CSS } from '@dnd-kit/utilities';
 import {
   Plus,
@@ -68,12 +69,12 @@ const COLUMNS: { id: TaskColumnId; label: string; icon: React.ReactNode }[] = [
 
 const TASK_TYPES = [
   { value: 'backtest', label: 'Backtest', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
-  { value: 'review', label: 'Review', color: 'bg-amber-500/20 text-amber-600 dark:text-amber-400 border-amber-500/30' },
-  { value: 'strategy', label: 'Strategy', color: 'bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-500/30' },
-  { value: 'research', label: 'Research', color: 'bg-purple-500/20 text-purple-600 dark:text-purple-400 border-purple-500/30' },
-  { value: 'journal', label: 'Journal', color: 'bg-rose-500/20 text-rose-600 dark:text-rose-400 border-rose-500/30' },
-  { value: 'setup', label: 'Setup', color: 'bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 border-cyan-500/30' },
-  { value: 'other', label: 'Other', color: 'bg-zinc-500/20 text-zinc-600 dark:text-zinc-400 border-zinc-500/30' },
+  { value: 'review', label: 'Review', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'strategy', label: 'Strategy', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'research', label: 'Research', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'journal', label: 'Journal', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'setup', label: 'Setup', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
+  { value: 'other', label: 'Other', color: 'bg-blue-500/20 text-blue-600 dark:text-blue-400 border-blue-500/30' },
 ];
 
 const PRIORITIES: { value: TaskPriority; label: string; color: string }[] = [
@@ -143,8 +144,8 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
     <div
       ref={setNodeRef}
       style={style}
-      className={`group relative bg-white dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 rounded-lg p-3 cursor-pointer hover:border-emerald-500/30 hover:shadow-sm transition-all ${
-        isDragging ? 'opacity-50 shadow-xl ring-2 ring-emerald-500/50' : ''
+      className={`group relative bg-white dark:bg-zinc-800/60 border border-zinc-200 dark:border-zinc-700/50 rounded-lg p-3 cursor-pointer hover:border-zinc-400 dark:hover:border-zinc-600 hover:shadow-sm transition-all ${
+        isDragging ? 'opacity-50 shadow-xl ring-2 ring-blue-500/50' : ''
       }`}
       onClick={onEdit}
     >
@@ -225,7 +226,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
                     e.stopPropagation();
                     onNavigateLink('playbooks', task.linked_playbook_id!);
                   }}
-                  className="p-1 text-emerald-500 dark:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
+                  className="p-1 text-blue-500 dark:text-blue-400 hover:bg-blue-500/10 rounded transition-colors"
                   title="Go to Playbook"
                 >
                   <BookOpen size={12} />
@@ -289,7 +290,7 @@ const SortableTaskCard: React.FC<SortableTaskCardProps> = ({ task, onEdit, onDel
 // ==================== TASK CARD (for overlay) ====================
 
 const TaskCardOverlay: React.FC<{ task: Task }> = ({ task }) => (
-  <div className="bg-white dark:bg-zinc-800 border border-emerald-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
+  <div className="bg-white dark:bg-zinc-800 border border-zinc-500/50 rounded-lg p-3 shadow-2xl w-72 cursor-grabbing">
     <h4 className="text-sm font-medium text-zinc-900 dark:text-zinc-200 truncate">{task.title}</h4>
     {task.description && (
       <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 line-clamp-2 leading-snug">
@@ -324,8 +325,12 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   onDeleteTask,
   onNavigateLink,
 }) => {
+  const { setNodeRef } = useDroppable({
+    id: column.id,
+  });
+
   return (
-    <div className="flex flex-col w-72 min-w-[288px] bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
+    <div ref={setNodeRef} className="flex flex-col w-72 min-w-[288px] bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
       {/* Column Header */}
       <div className="flex items-center justify-between px-4 py-3 bg-zinc-100 dark:bg-gradient-to-r dark:from-zinc-800/80 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
         <div className="flex items-center gap-2">
@@ -337,7 +342,7 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
         </div>
         <button
           onClick={onAddTask}
-          className="p-1 text-zinc-400 hover:text-emerald-500 dark:text-zinc-500 dark:hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition-colors"
+          className="p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 rounded transition-colors"
         >
           <Plus size={16} />
         </button>
@@ -425,7 +430,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500 transition-all"
               placeholder="What needs to be done?"
               autoFocus
             />
@@ -437,7 +442,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all resize-none"
+              className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500 transition-all resize-none"
               placeholder="Add details, context, or subtasks..."
               rows={3}
             />
@@ -475,7 +480,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
                 type="date"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                className="w-full px-4 py-2.5 bg-white dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-700 rounded-xl text-zinc-900 dark:text-zinc-100 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500/20 focus:border-zinc-500 transition-all"
               />
             </div>
             <div className="space-y-1.5">
@@ -498,7 +503,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
                   type="checkbox"
                   checked={isRecurring}
                   onChange={(e) => setIsRecurring(e.target.checked)}
-                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 checked:border-emerald-500 checked:bg-emerald-500 transition-all"
+                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-md border border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 checked:border-zinc-900 checked:bg-zinc-900 dark:checked:border-white dark:checked:bg-white transition-all"
                 />
                 <svg
                   className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-white opacity-0 peer-checked:opacity-100 transition-opacity"
@@ -557,7 +562,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ data, onClose, onSave, onDelete }
               <button
                 type="submit"
                 disabled={!title.trim() || saving}
-                className="px-6 py-2.5 text-sm font-semibold bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
+                className="px-6 py-2.5 text-sm font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 dark:text-black text-white rounded-xl shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-95"
               >
                 {saving ? 'Saving...' : isEdit ? 'Save Changes' : 'Create Task'}
               </button>
@@ -583,9 +588,9 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
       <div className="w-full max-w-md bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl shadow-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 bg-emerald-50 dark:bg-gradient-to-r dark:from-emerald-900/30 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="flex items-center justify-between px-6 py-4 bg-zinc-50 dark:bg-gradient-to-r dark:from-zinc-900/30 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
           <div className="flex items-center gap-2">
-            <CheckCircle2 size={20} className="text-emerald-500 dark:text-emerald-400" />
+            <CheckCircle2 size={20} className="text-zinc-900 dark:text-zinc-100" />
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Complete Task</h2>
           </div>
           <button onClick={onClose} className="p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 transition-colors">
@@ -603,7 +608,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500/50 resize-none"
+              className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded-lg text-zinc-900 dark:text-zinc-200 text-sm focus:outline-none focus:ring-2 focus:ring-zinc-500/50 resize-none"
               placeholder="What was the outcome? Any learnings?"
               rows={3}
             />
@@ -620,7 +625,7 @@ const CompletionModal: React.FC<CompletionModalProps> = ({ data, onClose, onComp
                 onComplete(notes);
                 onClose();
               }}
-              className="px-4 py-2 text-sm font-medium bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors"
+              className="px-4 py-2 text-sm font-medium bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 dark:text-black text-white rounded-lg transition-colors"
             >
               Mark Complete
             </button>

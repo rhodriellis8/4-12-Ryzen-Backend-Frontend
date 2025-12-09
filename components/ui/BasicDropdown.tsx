@@ -119,7 +119,7 @@ export default function BasicDropdown({
                   <button
                     className={`flex w-full items-center px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-800/50 ${
                       selectedItem?.id === item.id
-                        ? "font-medium text-emerald-600 dark:text-emerald-400"
+                        ? "font-bold text-zinc-900 dark:text-white"
                         : "text-zinc-700 dark:text-zinc-300"
                     }`}
                     onClick={() => handleItemSelect(item)}
@@ -140,7 +140,7 @@ export default function BasicDropdown({
                         }}
                       >
                         <svg
-                          className="h-4 w-4 text-emerald-500"
+                          className="h-4 w-4 text-zinc-900 dark:text-white"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

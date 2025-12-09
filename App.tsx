@@ -439,23 +439,17 @@ const App: React.FC = () => {
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 relative h-screen overflow-y-auto bg-grid scroll-smooth">
-        {/* Background Glow */}
-        <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-white dark:from-zinc-900/20 to-transparent pointer-events-none will-change-auto"></div>
-
-        <div className="relative z-10 flex flex-col min-h-screen">
-            <Header  
-              title={currentView.charAt(0).toUpperCase() + currentView.slice(1)} 
-              isDarkMode={isDarkMode}
-              toggleTheme={() => setIsDarkMode(!isDarkMode)}
-              onNavigate={setCurrentView}
-              onOpenAccountManager={() => setIsAccountModalOpen(true)}
-              activeAccountName={activeAccount ? activeAccount.name : undefined}
-            />
-            
-            <div className="flex-1 px-8 pt-4 pb-20 max-w-7xl mx-auto w-full">
-                {renderView()}
-            </div>
+      <main className="flex-1 h-screen overflow-y-auto bg-grid scroll-smooth relative">
+        <Header 
+          title={currentView.charAt(0).toUpperCase() + currentView.slice(1)} 
+          isDarkMode={isDarkMode}
+          toggleTheme={() => setIsDarkMode(!isDarkMode)}
+          onNavigate={setCurrentView}
+          onOpenAccountManager={() => setIsAccountModalOpen(true)}
+          activeAccountName={activeAccount ? activeAccount.name : undefined}
+        />
+        <div className="p-6 pt-0 w-full max-w-7xl mx-auto">
+            {renderView()}
         </div>
       </main>
 

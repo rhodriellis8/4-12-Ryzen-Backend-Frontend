@@ -3,6 +3,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { ChevronRight, Bell, Sun, Moon, Sparkles, Wallet, X, CheckCircle2, AlertTriangle, Info } from 'lucide-react';
 import { ViewState } from '../App';
 
+import ShinyButton from './ui/ShinyButton';
+
 interface HeaderProps {
   title: string;
   isDarkMode: boolean;
@@ -80,13 +82,14 @@ const Header: React.FC<HeaderProps> = ({
           <span>{activeAccountName || 'My Accounts'}</span>
         </button>
 
-        <button 
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-black text-xs font-semibold hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors duration-200 shadow-sm"
-          onClick={() => onNavigate('pricing')}
-        >
-          <Sparkles size={12} />
-          Pricing
-        </button>
+        <div className="w-[85px] h-[32px] scale-90 origin-right">
+            <ShinyButton 
+                text="Pricing" 
+                onClick={() => onNavigate('pricing')} 
+                icon={<Sparkles size={12} className="text-white" />}
+                className="scale-90"
+            />
+        </div>
 
         <button 
           onClick={toggleTheme}

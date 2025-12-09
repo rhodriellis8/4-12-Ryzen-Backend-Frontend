@@ -121,7 +121,7 @@ const JournalView: React.FC<JournalViewProps> = ({
                 className="p-2 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-lg hover:opacity-90 transition-opacity shadow-sm disabled:opacity-60"
                 title="New Entry"
             >
-                <Plus size={16} className={isCreating ? 'animate-spin' : ''} />
+                <Plus size={16} />
             </button>
         </div>
 

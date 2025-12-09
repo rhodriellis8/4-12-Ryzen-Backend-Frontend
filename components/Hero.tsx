@@ -119,19 +119,20 @@ const Hero: React.FC<HeroProps> = ({ userName }) => {
             </h1>
             <p className="text-zinc-500 dark:text-zinc-400">Here's what's happening in your trading workspace today.</p>
         </div>
-        
-        {/* Customization Toggle */}
-        <button 
-            onClick={() => setIsCustomizing(!isCustomizing)}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                isCustomizing 
-                ? 'bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm' 
-                : 'bg-white dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
-            }`}
-        >
-            {isCustomizing ? <Check size={14} /> : <Layout size={14} />}
-            {isCustomizing ? 'Done' : 'Customize'}
-        </button>
+        <div className="flex items-center gap-2">
+            {/* Customization Toggle */}
+            <button 
+                onClick={() => setIsCustomizing(!isCustomizing)}
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    isCustomizing 
+                    ? 'bg-zinc-900 text-white dark:bg-white dark:text-black shadow-sm' 
+                    : 'bg-white dark:bg-zinc-900 text-zinc-500 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700'
+                }`}
+            >
+                {isCustomizing ? <Check size={14} /> : <Layout size={14} />}
+                {isCustomizing ? 'Done' : 'Customize'}
+            </button>
+        </div>
       </div>
 
       <DndContext 
