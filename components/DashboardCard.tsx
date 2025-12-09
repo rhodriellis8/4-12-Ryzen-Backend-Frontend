@@ -19,7 +19,7 @@ const DashboardCard: React.FC = () => {
   return (
     <div className="relative group w-full lg:w-[420px]">
       {/* Glow effect behind */}
-      <div className="absolute -inset-1 bg-gradient-to-r from-zinc-400/10 to-zinc-500/10 dark:from-zinc-700/10 dark:to-zinc-800/10 rounded-xl opacity-0 group-hover:opacity-50 transition-opacity duration-300"></div>
+      <div className="absolute -inset-1 bg-gradient-to-r from-zinc-400/20 to-zinc-500/20 dark:from-zinc-700/20 dark:to-zinc-800/20 rounded-xl blur-xl opacity-50 group-hover:opacity-75 transition duration-1000"></div>
 
       {/* Main Card */}
       <div className="glass-panel rounded-xl p-1 relative overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-[1.01]">

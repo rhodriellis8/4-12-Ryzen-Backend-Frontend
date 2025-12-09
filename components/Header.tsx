@@ -73,23 +73,11 @@ const Header: React.FC<HeaderProps> = ({
       </div>
       
       <div className="flex items-center gap-4">
-        {/* My Accounts Button */}
-        <button 
-          onClick={onOpenAccountManager}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-white/10 text-zinc-700 dark:text-zinc-300 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all text-xs font-medium shadow-sm mr-2"
-        >
-          <Wallet size={12} />
-          <span>{activeAccountName || 'My Accounts'}</span>
-        </button>
-
-        <div className="w-[85px] h-[32px] scale-90 origin-right">
-            <ShinyButton 
-                text="Pricing" 
-                onClick={() => onNavigate('pricing')} 
-                icon={<Sparkles size={12} className="text-white" />}
-                className="scale-90"
-            />
-        </div>
+        <ShinyButton 
+            text="Pricing" 
+            onClick={() => onNavigate('pricing')} 
+            icon={<Sparkles size={12} className="text-white" />}
+        />
 
         <button 
           onClick={toggleTheme}

@@ -1,11 +1,11 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { 
   LayoutGrid, 
+  CandlestickChart,
   ScrollText, 
   Book, 
   Layers, 
-  CandlestickChart,
-  ListChecks
+  ListChecks,
 } from 'lucide-react';
 import { ViewState } from '../App';
 import ProfileDropdown from './ProfileDropdown';
@@ -15,157 +15,166 @@ interface SidebarProps {
   onNavigate: (view: ViewState) => void;
   onLogout: () => void;
   user?: {
-      name: string;
-      email: string;
-      avatar?: string;
+    name: string;
+    email: string;
+    avatar?: string;
   };
 }
 
-const NAV_ITEMS: { id: string; value: ViewState; label: string; icon: React.ReactNode }[] = [
-  { id: 'nav-dashboard', value: 'dashboard', label: 'Dashboard', icon: <LayoutGrid size={18} /> },
-  { id: 'nav-trades', value: 'trades', label: 'Trades', icon: <CandlestickChart size={18} /> },
-  { id: 'nav-journal', value: 'journal', label: 'Journal', icon: <ScrollText size={18} /> },
-  { id: 'nav-notebook', value: 'notebook', label: 'Notebooks', icon: <Book size={18} /> },
-  { id: 'nav-playbooks', value: 'playbooks', label: 'Playbooks', icon: <Layers size={18} /> },
-  { id: 'nav-tasks', value: 'tasks', label: 'Tasks', icon: <ListChecks size={18} /> },
-];
-
 const Sidebar: React.FC<SidebarProps> = ({ currentView, onNavigate, onLogout, user }) => {
-  const activeIndex = useMemo(() => {
-    return NAV_ITEMS.findIndex(item => item.value === currentView);
-  }, [currentView]);
+  const menuItems: { id: ViewState; label: string; icon: React.ReactNode }[] = [
+    { id: 'dashboard', label: 'Dashboard', icon: <LayoutGrid size={18} /> },
+    { id: 'trades', label: 'Trades', icon: <CandlestickChart size={18} /> },
+    { id: 'journal', label: 'Journal', icon: <ScrollText size={18} /> },
+    { id: 'notebook', label: 'Notebooks', icon: <Book size={18} /> },
+    { id: 'playbooks', label: 'Playbooks', icon: <Layers size={18} /> },
+    { id: 'tasks', label: 'Tasks', icon: <ListChecks size={18} /> },
+  ];
 
-  // Calculate glider position: activeIndex * 100% of item height
-  // If activeIndex is -1 (not in list, e.g. settings), hide glider or keep it at 0?
-  // We'll hide it by opacity if activeIndex is -1
-  const showGlider = activeIndex !== -1;
+  const totalItems = menuItems.length;
+
+  const profileData = user ? {
+    name: user.name,
+    email: user.email,
+    avatar: user.avatar || "https://ferf1mheo22r9ira.public.blob.vercel-storage.com/profile-mjss82WnWBRO86MHHGxvJ2TVZuyrDv.jpeg",
+    subscription: "PRO",
+    model: "Gemini 2.0 Flash"
+  } : undefined;
 
   return (
-    <aside 
-      className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-white dark:bg-zinc-950 sticky top-0 z-50"
-      style={{ 
-        "--main-color": "#ffffff", 
-        "--main-color-opacity": "rgba(255, 255, 255, 0.1)", 
-        "--total-radio": NAV_ITEMS.length 
-      } as React.CSSProperties}
-    >
-      <style dangerouslySetInnerHTML={{ __html: `
-        .glider-container {
+    <aside className="w-64 border-r border-zinc-200 dark:border-white/5 h-screen flex flex-col justify-between bg-zinc-950 text-white relative z-50">
+       <style>{`
+        .radio-nav-container {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          padding-left: 0.5rem;
+          --main-color: #ffffff;
+          --main-color-opacity: rgba(255, 255, 255, 0.1);
+          --total-radio: ${totalItems};
+        }
+
+        .radio-nav-container input {
+          cursor: pointer;
+          appearance: none;
+          position: absolute;
+          opacity: 0;
+          pointer-events: none;
+        }
+
+        .radio-nav-container .glider-container {
           position: absolute;
           left: 0;
           top: 0;
           bottom: 0;
-          width: 1px;
-          pointer-events: none;
           background: linear-gradient(0deg,
               rgba(0, 0, 0, 0) 0%,
-              rgba(27, 27, 27, 0.2) 50%,
+              rgba(27, 27, 27, 1) 50%,
               rgba(0, 0, 0, 0) 100%);
-        }
-        
-        /* Dark mode override for track */
-        .dark .glider-container {
-           background: linear-gradient(0deg,
-              rgba(0, 0, 0, 0) 0%,
-              rgba(255, 255, 255, 0.2) 50%,
-              rgba(0, 0, 0, 0) 100%);
+          width: 1px;
+          pointer-events: none;
         }
 
-        .glider-track {
+        .radio-nav-container .glider-container .glider {
           position: relative;
           height: calc(100% / var(--total-radio));
           width: 100%;
-          transition: transform 0.5s cubic-bezier(0.37, 1.95, 0.66, 0.56);
-          pointer-events: none;
+          background: linear-gradient(0deg,
+              rgba(0, 0, 0, 0) 0%,
+              var(--main-color) 50%,
+              rgba(0, 0, 0, 0) 100%);
+          transition: transform 0.3s cubic-bezier(0.37, 1.95, 0.66, 0.56);
         }
 
-        .glider-track::before {
+        .radio-nav-container .glider-container .glider::before {
           content: "";
           position: absolute;
           height: 60%;
-          width: 2px;
+          width: 300%;
           top: 50%;
-          left: 0;
           transform: translateY(-50%);
           background: var(--main-color);
-          z-index: 10;
-          box-shadow: 0 0 10px var(--main-color);
+          filter: blur(10px);
+          opacity: 0.6;
         }
-        
-        .glider-track::after {
+
+        .radio-nav-container .glider-container .glider::after {
           content: "";
           position: absolute;
           left: 0;
-          top: 0;
           height: 100%;
           width: 150px;
           background: linear-gradient(90deg,
               var(--main-color-opacity) 0%,
               rgba(0, 0, 0, 0) 100%);
-          z-index: 0;
         }
-      `}} />
 
-      <div className="p-6 pb-2">
+        .radio-nav-container label {
+          cursor: pointer;
+          padding: 0.75rem;
+          position: relative;
+          color: rgb(163, 163, 163);
+          transition: all 0.3s ease-in-out;
+          border-radius: 0.75rem;
+          border: 1px solid transparent;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        .radio-nav-container input:checked + label {
+          color: var(--main-color);
+          background: rgba(255, 255, 255, 0.05);
+          border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        ${menuItems.map((_, index) => `
+        .radio-nav-container input:nth-of-type(${index + 1}):checked ~ .glider-container .glider {
+          transform: translateY(${index * 100}%);
+        }
+        `).join('')}
+      `}</style>
+
+      <div className="p-4">
         {/* Logo */}
         <div 
-          className="flex items-center gap-3 mb-8 group cursor-pointer px-2"
+          className="flex items-center gap-3 mb-10 px-2 group cursor-pointer"
           onClick={() => onNavigate('dashboard')}
         >
-          <div className="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-black flex items-center justify-center font-bold font-geist tracking-tighter text-sm group-hover:scale-105 transition-transform duration-200 shadow-md">
+          <div className="w-8 h-8 rounded-lg bg-white text-black flex items-center justify-center font-bold font-geist tracking-tighter text-sm group-hover:scale-105 transition-transform duration-300 shadow-[0_0_15px_rgba(255,255,255,0.3)]">
             R
           </div>
-          <span className="font-geist font-medium text-sm tracking-tight text-zinc-900 dark:text-zinc-100">
+          <span className="font-geist font-medium text-sm tracking-tight text-zinc-100">
             Ryzen
           </span>
         </div>
 
-        {/* Navigation Links */}
-        <div className="relative flex flex-col pl-2 pr-2">
-          {/* Glider Container (Track + Moving Glider) */}
-          <div className="glider-container">
-             <div 
-               className="glider-track"
-               style={{
-                 transform: activeIndex !== -1 ? `translateY(${activeIndex * 100}%)` : 'translateY(-100%)',
-                 opacity: activeIndex !== -1 ? 1 : 0,
-               }}
-             />
-          </div>
-
-          {/* Items */}
-          {NAV_ITEMS.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => onNavigate(item.value)}
-              className={`
-                relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium transition-colors duration-200 z-10
-                ${currentView === item.value 
-                  ? 'text-zinc-900 dark:text-white bg-zinc-100/10 dark:bg-white/5' 
-                  : 'text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-50/50 dark:hover:bg-white/5'
-                }
-              `}
-            >
-              <span className="relative z-10 flex items-center gap-3">
+        {/* Radio Navigation */}
+        <div className="radio-nav-container">
+          {menuItems.map((item) => (
+            <React.Fragment key={item.id}>
+              <input 
+                type="radio" 
+                id={`nav-${item.id}`} 
+                name="nav-menu" 
+                checked={currentView === item.id} 
+                onChange={() => onNavigate(item.id)}
+              />
+              <label htmlFor={`nav-${item.id}`} className="text-sm">
                 {item.icon}
                 {item.label}
-              </span>
-            </button>
+              </label>
+            </React.Fragment>
           ))}
+
+          <div className="glider-container">
+            <div className="glider"></div>
+          </div>
         </div>
       </div>
 
-      <div className="p-4 border-t border-zinc-200 dark:border-white/5">
-        <ProfileDropdown 
-            onNavigate={onNavigate as any} 
-            onLogout={onLogout}
-            data={user ? {
-                name: user.name || 'User',
-                email: user.email || '',
-                avatar: user.avatar || '',
-                subscription: 'PRO'
-            } : undefined}
-        />
+      <div className="p-4 border-t border-white/5">
+        <ProfileDropdown data={profileData} onLogout={onLogout} />
       </div>
     </aside>
   );

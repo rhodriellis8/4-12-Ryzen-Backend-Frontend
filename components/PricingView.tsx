@@ -190,7 +190,7 @@ const PricingCard = ({ title, price, subtitle, icon, features, buttonText, popul
             )}
             
             {/* Top Glow Line */}
-            {!popular && <div className={`absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-zinc-200 dark:via-white/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>}
+            <div className={`absolute top-0 left-4 right-4 h-px bg-gradient-to-r from-transparent ${popular ? 'via-zinc-500/30 dark:via-zinc-400/70' : 'via-zinc-200 dark:via-white/70'} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
 
             <div className="flex justify-between items-start mb-6">
                 <div>

@@ -332,17 +332,17 @@ const DroppableColumn: React.FC<DroppableColumnProps> = ({
   return (
     <div ref={setNodeRef} className="flex flex-col w-72 min-w-[288px] bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden">
       {/* Column Header */}
-      <div className="flex items-center justify-between px-4 py-3 bg-zinc-100 dark:bg-gradient-to-r dark:from-zinc-800/80 dark:to-zinc-900/80 border-b border-zinc-200 dark:border-zinc-800">
+      <div className="flex items-center justify-between px-4 py-3 bg-zinc-900 border-b border-zinc-800">
         <div className="flex items-center gap-2">
-          <span className="text-zinc-500 dark:text-zinc-400">{column.icon}</span>
-          <h3 className="text-sm font-semibold text-zinc-700 dark:text-zinc-200">{column.label}</h3>
-          <span className="text-[10px] px-1.5 py-0.5 bg-white dark:bg-zinc-700/50 rounded-full text-zinc-500 dark:text-zinc-400 border border-zinc-200 dark:border-transparent">
+          <span className="text-zinc-400">{column.icon}</span>
+          <h3 className="text-sm font-semibold text-zinc-100">{column.label}</h3>
+          <span className="text-[10px] px-1.5 py-0.5 bg-zinc-800 rounded-full text-zinc-400 border border-zinc-700/50">
             {tasks.length}
           </span>
         </div>
         <button
           onClick={onAddTask}
-          className="p-1 text-zinc-400 hover:text-zinc-600 dark:text-zinc-500 dark:hover:text-zinc-300 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 rounded transition-colors"
+          className="p-1 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 rounded transition-colors"
         >
           <Plus size={16} />
         </button>

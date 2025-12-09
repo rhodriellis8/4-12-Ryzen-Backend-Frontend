@@ -24,13 +24,13 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
       --border-radius: 24px;
       --padding: 4px;
       --transition: 0.4s;
-      --button-color: #101010;
+      --button-color: #000000;
       --highlight-color-hue: 210deg;
+      /* Change this hue to recolor the glow */
 
       user-select: none;
       display: flex;
       justify-content: center;
-      align-items: center;
 
       background-color: var(--button-color);
 
@@ -55,8 +55,6 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
         box-shadow var(--transition),
         border var(--transition),
         background-color var(--transition);
-        
-      padding: 12px 24px;
     }
 
     .btn::before {
@@ -135,14 +133,13 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
       position: relative;
       display: flex;
       align-items: center;
-      min-width: 4em;
+      min-width: 6.4em;
     }
 
     .txt-1,
     .txt-2 {
       position: absolute;
       word-spacing: -1em;
-      white-space: nowrap;
     }
 
     .txt-1 {
@@ -297,7 +294,7 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
     }
       `}} />
 
-      <button className="btn focus:outline-none" {...props}>
+      <button className="btn px-3 py-2 md:px-4 md:py-2 focus:outline-none" {...props}>
         {icon && <span className="btn-svg flex items-center justify-center mr-2">{icon}</span>}
         
         <div className="txt-wrapper">
@@ -307,7 +304,7 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
                 <span key={`1-${i}`} className="btn-letter font-medium text-xs uppercase tracking-wider">{char === ' ' ? '\u00A0' : char}</span>
               ))
             ) : (
-               <span className="btn-letter font-medium text-xs uppercase tracking-wider">{content}</span>
+               <span className="btn-letter font-medium text-xs uppercase tracking-wider">{textContent}</span>
             )}
           </div>
           <div className="txt-2">
@@ -316,7 +313,7 @@ const ShinyButton: React.FC<ShinyButtonProps> = ({ text, className = '', icon, c
                 <span key={`2-${i}`} className="btn-letter font-medium text-xs uppercase tracking-wider">{char === ' ' ? '\u00A0' : char}</span>
               ))
             ) : (
-               <span className="btn-letter font-medium text-xs uppercase tracking-wider">{content}</span>
+               <span className="btn-letter font-medium text-xs uppercase tracking-wider">{textContent}</span>
             )}
           </div>
         </div>
